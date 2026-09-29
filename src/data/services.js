@@ -1,0 +1,241 @@
+import {
+  GraduationCap,
+  Briefcase,
+  RocketLaunch,
+  AirplaneTilt,
+  UsersThree,
+  MapPinArea,
+  Translate,
+  Buildings,
+  Certificate,
+} from '@phosphor-icons/react'
+
+// Contenu informatif général. Les critères officiels évoluent :
+// chaque fiche renvoie vers la source gouvernementale à jour.
+export const services = [
+  {
+    slug: 'etudes-au-canada',
+    icon: GraduationCap,
+    title: 'Études au Canada',
+    short: "Choix de l'établissement, admission, CAQ et permis d'études.",
+    intro:
+      "Étudier au Canada ouvre la porte à un diplôme reconnu, à une expérience de travail pendant et après les études, puis souvent à la résidence permanente. Nous construisons avec vous un projet d'études cohérent et un dossier solide.",
+    forWho: [
+      'Bacheliers et étudiants souhaitant poursuivre au collège ou à l’université',
+      'Professionnels voulant se reconvertir ou se spécialiser',
+      'Parents qui préparent le projet d’études de leur enfant',
+    ],
+    requirements: [
+      "Lettre d'acceptation d'un établissement d'enseignement désigné (EED)",
+      'Attestation de la province ou du territoire (APP) ou CAQ pour le Québec, selon le cas',
+      'Preuve de capacité financière (frais de scolarité et de subsistance)',
+      "Plan d'études clair et liens avec le pays d'origine",
+      'Examen médical et données biométriques si demandés',
+    ],
+    steps: [
+      { title: 'Orientation', text: 'Analyse du parcours, du budget et choix de 3 à 5 programmes réalistes.' },
+      { title: 'Admission', text: 'Constitution et dépôt des demandes auprès des établissements.' },
+      { title: 'Documents provinciaux', text: 'Demande de CAQ (Québec) ou obtention de l’attestation provinciale.' },
+      { title: 'Permis d’études', text: 'Montage du dossier financier, lettre explicative et dépôt en ligne.' },
+      { title: 'Départ', text: 'Logement, assurance, arrivée et premières démarches au Canada.' },
+    ],
+    documents: ['Passeport valide', 'Relevés de notes et diplômes', 'Relevés bancaires et preuves de revenus du garant', 'Lettre explicative', 'Résultats de test de langue si exigés'],
+    help: ['Choix d’établissements selon votre profil et budget', 'Rédaction et relecture de la lettre explicative', 'Vérification complète avant chaque dépôt', 'Préparation à l’arrivée'],
+    official: 'https://www.canada.ca/fr/immigration-refugies-citoyennete/services/etudier-canada.html',
+  },
+  {
+    slug: 'entree-express',
+    icon: RocketLaunch,
+    title: 'Résidence permanente - Entrée express',
+    short: 'Profil Entrée express, score SCG et stratégie francophone.',
+    intro:
+      "Entrée express est le système principal pour les travailleurs qualifiés qui veulent devenir résidents permanents. Les candidats sont classés selon le Système de classement global (SCG). Un bon niveau de français peut faire une vraie différence grâce aux tirages ciblés francophones.",
+    forWho: [
+      'Travailleurs qualifiés avec au moins un an d’expérience',
+      'Diplômés et professionnels francophones',
+      'Personnes ayant déjà une expérience de travail au Canada',
+    ],
+    requirements: [
+      'Admissibilité à un programme fédéral : travailleurs qualifiés, expérience canadienne ou métiers spécialisés',
+      'Résultats de tests de langue reconnus (TCF Canada, TEF Canada, IELTS, CELPIP...)',
+      'Évaluation des diplômes étrangers (EDE) selon le programme',
+      'Preuve de fonds, sauf exemptions prévues',
+    ],
+    steps: [
+      { title: 'Diagnostic', text: 'Calcul de votre score SCG et identification des leviers d’amélioration.' },
+      { title: 'Tests et EDE', text: 'Planification du test de langue et de l’évaluation des diplômes.' },
+      { title: 'Profil en ligne', text: 'Création et optimisation de votre profil Entrée express.' },
+      { title: 'Invitation', text: 'Suivi des tirages et préparation des preuves à l’avance.' },
+      { title: 'Demande de RP', text: 'Dépôt complet de la demande dans les délais impartis.' },
+    ],
+    documents: ['Résultats du test de langue', 'Rapport EDE', 'Lettres de référence d’employeurs', 'Preuve de fonds', 'Certificats de police'],
+    help: ['Stratégie pour augmenter votre score', 'Préparation au TCF avec TCF Express', 'Lettres d’expérience conformes', 'Suivi jusqu’à la confirmation de RP'],
+    official: 'https://www.canada.ca/fr/immigration-refugies-citoyennete/services/immigrer-canada/entree-express.html',
+  },
+  {
+    slug: 'equivalence-de-diplomes',
+    icon: Certificate,
+    title: 'Équivalence de diplômes',
+    short: 'Évaluation de vos diplômes étrangers (EDE) pour le Canada et le Québec.',
+    intro:
+      "Pour immigrer ou travailler au Canada, vos diplômes obtenus à l’étranger doivent souvent être évalués par un organisme reconnu. L’évaluation des diplômes d’études (EDE) est exigée pour certains programmes et rapporte des points dans Entrée express. Nous vous aidons à choisir le bon organisme et à réussir la procédure du premier coup.",
+    forWho: [
+      'Candidats à la résidence permanente par Entrée express',
+      'Diplômés qui veulent faire reconnaître leur niveau d’études au Canada',
+      'Candidats à l’immigration au Québec (évaluation comparative)',
+      'Professionnels qui préparent la reconnaissance de leur métier',
+    ],
+    requirements: [
+      'Choix d’un organisme désigné par IRCC (WES, ICAS, CES, IQAS, ICES ou organisme professionnel selon le métier)',
+      'Copies des diplômes et relevés de notes',
+      'Documents officiels envoyés directement par votre établissement, lorsque l’organisme l’exige',
+      'Traductions certifiées si vos documents ne sont ni en français ni en anglais',
+    ],
+    steps: [
+      { title: 'Analyse', text: 'Choix de l’organisme adapté à votre objectif et à votre profession.' },
+      { title: 'Dossier', text: 'Liste précise des pièces, traductions et authentifications nécessaires.' },
+      { title: 'Demande en ligne', text: 'Création du compte, formulaire et paiement auprès de l’organisme.' },
+      { title: 'Envoi officiel', text: 'Coordination avec votre université ou école pour l’envoi sécurisé des documents.' },
+      { title: 'Rapport', text: 'Réception du rapport et utilisation dans votre profil d’immigration.' },
+    ],
+    documents: ['Diplômes', 'Relevés de notes de toutes les années', 'Passeport', 'Traductions certifiées si nécessaire', 'Formulaires de l’organisme choisi'],
+    help: ['Choix du bon organisme dès le départ', 'Démarches d’authentification auprès des établissements', 'Suivi du dossier jusqu’au rapport final', 'Intégration du résultat dans Entrée express ou au Québec'],
+    official: 'https://www.canada.ca/fr/immigration-refugies-citoyennete/services/immigrer-canada/entree-express/documents/evaluer-diplomes-etudes.html',
+  },
+  {
+    slug: 'permis-de-travail',
+    icon: Briefcase,
+    title: 'Permis de travail',
+    short: 'Offre d’emploi, EIMT, dispenses et permis ouverts.',
+    intro:
+      "Travailler au Canada permet d’acquérir une expérience canadienne précieuse pour la suite de votre parcours. Selon votre situation, un permis peut être lié à un employeur, dispensé d’EIMT ou ouvert.",
+    forWho: [
+      'Candidats ayant une offre d’emploi d’un employeur canadien',
+      'Conjoints d’étudiants ou de travailleurs éligibles',
+      'Diplômés canadiens (permis post-diplôme)',
+    ],
+    requirements: [
+      'Offre d’emploi valide et, selon le cas, EIMT positive ou numéro d’offre dispensée',
+      'Qualifications et expérience correspondant au poste',
+      'Preuve que vous quitterez le Canada à la fin du séjour autorisé',
+      'Casier judiciaire vierge et bonne santé',
+    ],
+    steps: [
+      { title: 'Évaluation', text: 'Identification du type de permis adapté à votre profil.' },
+      { title: 'CV canadien', text: 'Adaptation du CV et de la lettre aux standards canadiens.' },
+      { title: 'Démarches employeur', text: 'Accompagnement sur l’EIMT ou l’offre dispensée.' },
+      { title: 'Dépôt', text: 'Montage et dépôt de la demande de permis.' },
+    ],
+    documents: ['Contrat ou offre d’emploi', 'Diplômes et attestations', 'CV à jour', 'Passeport', 'Photos conformes'],
+    help: ['CV et lettre au format canadien', 'Vérification de la conformité de l’offre', 'Dossier complet et cohérent'],
+    official: 'https://www.canada.ca/fr/immigration-refugies-citoyennete/services/travailler-canada.html',
+  },
+  {
+    slug: 'mobilite-francophone',
+    icon: Translate,
+    title: 'Mobilité francophone',
+    short: 'Travailler hors Québec grâce à votre français, sans EIMT.',
+    intro:
+      "Le volet Mobilité francophone permet à des travailleurs d’expression française d’obtenir un permis de travail pour un emploi hors du Québec, sans étude d’impact sur le marché du travail. Votre niveau de français devient un véritable atout.",
+    forWho: ['Francophones ayant une offre d’emploi hors Québec', 'Profils de nombreux domaines professionnels', 'Candidats qui visent ensuite la résidence permanente'],
+    requirements: [
+      'Offre d’emploi d’un employeur situé hors du Québec',
+      'Niveau de français suffisant attesté par un test reconnu (TCF Canada ou TEF Canada)',
+      'Poste admissible selon les critères en vigueur',
+    ],
+    steps: [
+      { title: 'Test de français', text: 'Préparation ciblée au TCF Canada pour atteindre le niveau requis.' },
+      { title: 'Recherche d’emploi', text: 'Conseils de recherche et salons d’emploi francophones.' },
+      { title: 'Offre de l’employeur', text: 'Vérification de l’offre et soumission par l’employeur.' },
+      { title: 'Permis', text: 'Dépôt de la demande de permis de travail.' },
+    ],
+    documents: ['Résultats TCF / TEF Canada', 'Offre d’emploi', 'CV', 'Passeport'],
+    help: ['Préparation au TCF avec TCF Express', 'Accompagnement sur la recherche d’emploi', 'Dossier de permis complet'],
+    official: 'https://www.canada.ca/fr/immigration-refugies-citoyennete/services/travailler-canada/permis/temporaire/mobilite-internationale/mobilite-francophone.html',
+  },
+  {
+    slug: 'immigration-quebec',
+    icon: Buildings,
+    title: 'Immigrer au Québec',
+    short: 'Programmes de sélection du Québec, Arrima et CSQ.',
+    intro:
+      "Le Québec sélectionne ses propres immigrants économiques. Le processus passe par une déclaration d’intérêt dans Arrima, puis par le Certificat de sélection du Québec (CSQ) avant la demande fédérale de résidence permanente.",
+    forWho: ['Travailleurs qualifiés francophones', 'Diplômés et travailleurs déjà au Québec', 'Familles souhaitant s’établir dans la province'],
+    requirements: [
+      'Déclaration d’intérêt dans la plateforme Arrima',
+      'Connaissance du français attestée par un test reconnu',
+      'Formation et expérience répondant aux critères du programme visé',
+      'Engagement à s’établir au Québec',
+    ],
+    steps: [
+      { title: 'Analyse', text: 'Vérification des programmes québécois accessibles à votre profil.' },
+      { title: 'Arrima', text: 'Création et optimisation de la déclaration d’intérêt.' },
+      { title: 'CSQ', text: 'Demande de sélection après invitation.' },
+      { title: 'Fédéral', text: 'Demande de résidence permanente auprès d’IRCC.' },
+    ],
+    documents: ['Résultats de français', 'Diplômes', 'Preuves d’expérience', 'Pièces d’état civil'],
+    help: ['Lecture des critères à jour du MIFI', 'Optimisation du profil Arrima', 'Suivi jusqu’à la RP'],
+    official: 'https://www.quebec.ca/immigration',
+  },
+  {
+    slug: 'programmes-provinciaux',
+    icon: MapPinArea,
+    title: 'Programmes des provinces (PCP)',
+    short: 'Nomination provinciale et programmes régionaux.',
+    intro:
+      "Chaque province a ses propres besoins de main-d’œuvre. Les programmes des candidats des provinces (PCP) et certains programmes régionaux permettent d’obtenir une nomination qui renforce fortement la demande de résidence permanente.",
+    forWho: ['Profils ciblés par une province (santé, métiers, TI...)', 'Candidats liés à une province (études, emploi, famille)', 'Francophones visés par les stratégies hors Québec'],
+    requirements: [
+      'Critères propres à chaque province et à chaque volet',
+      'Souvent une offre d’emploi ou un lien avec la province',
+      'Test de langue et évaluation des diplômes',
+    ],
+    steps: [
+      { title: 'Cartographie', text: 'Identification des provinces et volets compatibles.' },
+      { title: 'Candidature', text: 'Déclaration d’intérêt ou demande de nomination.' },
+      { title: 'Nomination', text: 'Obtention du certificat provincial.' },
+      { title: 'RP', text: 'Demande fédérale de résidence permanente.' },
+    ],
+    documents: ['Résultats de langue', 'EDE', 'Offre d’emploi le cas échéant', 'Preuves de liens avec la province'],
+    help: ['Veille des ouvertures de volets', 'Choix stratégique de la province', 'Dossier complet'],
+    official: 'https://www.canada.ca/fr/immigration-refugies-citoyennete/services/immigrer-canada/candidats-provinces.html',
+  },
+  {
+    slug: 'visa-visiteur',
+    icon: AirplaneTilt,
+    title: 'Visa visiteur',
+    short: 'Tourisme, visite familiale, voyage d’affaires.',
+    intro:
+      "Le visa de résident temporaire permet de visiter le Canada pour le tourisme, la famille ou les affaires. La clé d’un dossier accepté : un motif clair, des moyens suffisants et des attaches solides dans votre pays.",
+    forWho: ['Touristes', 'Parents rendant visite à un proche', 'Participants à des conférences ou rencontres d’affaires'],
+    requirements: ['Passeport valide', 'Moyens financiers suffisants pour le séjour', 'Attaches professionnelles, familiales ou patrimoniales', 'Motif de voyage clair et documenté'],
+    steps: [
+      { title: 'Analyse', text: 'Évaluation de votre profil de voyageur.' },
+      { title: 'Dossier', text: 'Rassemblement des justificatifs et lettre d’invitation.' },
+      { title: 'Dépôt', text: 'Formulaires, paiement et biométrie.' },
+    ],
+    documents: ['Passeport', 'Relevés bancaires', 'Attestation d’emploi', 'Lettre d’invitation', 'Réservations'],
+    help: ['Lettre explicative sur mesure', 'Vérification des preuves financières', 'Préparation à la biométrie'],
+    official: 'https://www.canada.ca/fr/immigration-refugies-citoyennete/services/visiter-canada.html',
+  },
+  {
+    slug: 'regroupement-familial',
+    icon: UsersThree,
+    title: 'Regroupement familial',
+    short: 'Parrainage de conjoint, enfants, parents et super visa.',
+    intro:
+      "Un citoyen canadien ou un résident permanent peut parrainer certains membres de sa famille. Nous vous aidons à prouver la relation et à respecter les engagements financiers exigés.",
+    forWho: ['Conjoints et conjoints de fait', 'Enfants à charge', 'Parents et grands-parents (parrainage ou super visa)'],
+    requirements: ['Répondant citoyen ou résident permanent admissible', 'Preuve de la relation authentique', 'Engagement financier du répondant', 'Examens médicaux et vérifications de sécurité'],
+    steps: [
+      { title: 'Admissibilité', text: 'Vérification du répondant et du lien familial.' },
+      { title: 'Preuves', text: 'Constitution des preuves de relation.' },
+      { title: 'Dépôt', text: 'Demande de parrainage et de résidence permanente.' },
+    ],
+    documents: ['Actes d’état civil', 'Photos, échanges, preuves de vie commune', 'Preuves de revenus du répondant'],
+    help: ['Organisation des preuves de relation', 'Contrôle de cohérence du dossier', 'Suivi auprès d’IRCC'],
+    official: 'https://www.canada.ca/fr/immigration-refugies-citoyennete/services/immigrer-canada/parrainer-membre-famille.html',
+  },
+]
+
+export const getService = (slug) => services.find((s) => s.slug === slug)
