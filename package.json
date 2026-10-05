@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "build:single": "vite build --mode single"
+    "build:single": "VITE_SHOW_EXAMPLES=true vite build --mode single"
   },
   "dependencies": {
     "@fontsource-variable/outfit": "^5.3.0",

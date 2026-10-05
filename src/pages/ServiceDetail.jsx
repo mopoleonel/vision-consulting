@@ -5,6 +5,7 @@ import { CtaBand } from '../components/Blocks.jsx'
 import { getService, services } from '../data/services.js'
 import { site, whatsappLink } from '../config/site.js'
 import NotFound from './NotFound.jsx'
+import { SuccessRates, Testimonials } from '../components/Proof.jsx'
 
 function List({ items, icon: Icon = Check }) {
   return (
@@ -85,9 +86,11 @@ export default function ServiceDetail() {
               pour les critères et frais en vigueur.
             </p>
           </Reveal>
+          <Testimonials only={s.slug} />
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-28 lg:self-start">
+          <SuccessRates only={s.slug} />
           <div className="card p-6">
             <h2 className="font-display text-lg font-bold text-brand-800 dark:text-white">Parlons de votre projet</h2>
             <p className="muted mt-2 text-sm">Un conseiller vous répond rapidement.</p>

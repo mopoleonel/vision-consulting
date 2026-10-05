@@ -8,6 +8,7 @@ import { steps, values, faqs } from '../data/content.js'
 import mark from '../assets/logo-mark.png'
 import { site, whatsappLink } from '../config/site.js'
 import { tools } from '../data/tools.js'
+import { StatsBand, SuccessRates, Testimonials } from '../components/Proof.jsx'
 
 function Hero() {
   const reduce = useReducedMotion()
@@ -254,11 +255,14 @@ export default function Home() {
     <>
       <Hero />
       <Promises />
+      <StatsBand />
       <ServicesBento />
+      <SuccessRates />
       <ToolsStrip />
       <TcfPromo />
       <Process />
       <Why />
+      <Testimonials />
       <Offices />
       <FaqPreview />
       <CtaBand />
