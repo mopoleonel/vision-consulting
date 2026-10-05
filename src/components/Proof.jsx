@@ -11,8 +11,8 @@ import {
 
 export function ExampleBadge() {
   return (
-    <span className="ml-2 inline-block rounded-full bg-amber-400 px-2.5 py-0.5 align-middle font-sans text-[11px] font-bold uppercase tracking-wide text-amber-950">
-      Exemple, à remplacer
+    <span className="ml-2 inline-block rounded-full border border-slate-300 px-2 py-0.5 align-middle font-sans text-[10px] font-medium text-slate-500 dark:border-white/15 dark:text-slate-400">
+      Données de démonstration
     </span>
   )
 }
@@ -108,7 +108,7 @@ function Stars({ n }) {
 }
 
 export function Testimonials({ only }) {
-  const list = only ? shownTestimonials.filter((t) => t.service === only) : shownTestimonials
+  const list = only ? shownTestimonials.filter((t) => t.service === only) : shownTestimonials.slice(0, 3)
   const example = isExample(shownTestimonials, testimonials)
   if (!list.length) return null
   return (

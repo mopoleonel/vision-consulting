@@ -34,3 +34,9 @@ Les formulaires envoient la demande par **WhatsApp** ou **e-mail** (aucun serveu
 
 ## Photos
 Le site n'utilise pas de photos de stock. Pour en ajouter, placez vos images dans `src/assets/` et importez-les dans les pages.
+
+## ✅ Avant le lancement officiel (checklist)
+1. `src/data/proof.js` : remplir `stats`, `successRates`, `testimonials` avec de **vraies** données, puis mettre `DEMO_MODE = false` (retire les données fictives et autorise Google à indexer le site).
+2. `src/config/tarifs.js` : vos honoraires réels (grille tarifaire), RCCM, NIU.
+3. `src/config/site.js` : vrai e-mail et liens des réseaux sociaux.
+4. `src/pages/Legal.jsx` : forme juridique et responsable de publication.
