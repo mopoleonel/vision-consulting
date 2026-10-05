@@ -5,8 +5,9 @@ import { Reveal, SectionTitle } from '../components/ui.jsx'
 import { Accordion, CtaBand, TcfPromo } from '../components/Blocks.jsx'
 import { services } from '../data/services.js'
 import { steps, values, faqs } from '../data/content.js'
-import logo from '../assets/logo.webp'
+import mark from '../assets/logo-mark.png'
 import { site, whatsappLink } from '../config/site.js'
+import { tools } from '../data/tools.js'
 
 function Hero() {
   const reduce = useReducedMotion()
@@ -49,11 +50,12 @@ function Hero() {
         >
           <div className="absolute inset-[6%] rounded-full bg-gradient-to-br from-brand-600 to-brand-900 shadow-[0_40px_80px_-30px_rgb(0_49_151/0.6)]" />
           <div className="absolute inset-[6%] rounded-full border border-white/10 [background:repeating-radial-gradient(circle_at_center,transparent_0_38px,rgb(255_255_255/0.06)_39px_40px)]" />
-          <motion.img
-            src={logo} alt="Logo TCF Express" width="512" height="512"
+          <motion.div
             animate={float} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute left-[21%] top-[21%] h-[58%] w-[58%] rounded-full bg-white p-2 shadow-2xl"
-          />
+            className="absolute left-[21%] top-[21%] grid h-[58%] w-[58%] place-items-center rounded-full bg-white shadow-2xl"
+          >
+            <img src={mark} alt="Logo Vision Consulting" width="300" height="134" className="w-[72%]" />
+          </motion.div>
           {/* Carte d'embarquement stylisée */}
           <motion.div
             animate={reduce ? {} : { y: [0, 8, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
@@ -84,7 +86,7 @@ function Hero() {
 
 function Promises() {
   const items = [
-    [CheckCircle, 'Évaluation gratuite', 'Réponse sous 48 h ouvrées'],
+    [CheckCircle, 'Évaluation gratuite', 'Résultat immédiat, sans inscription'],
     [ChatCircleDots, 'Suivi sur WhatsApp', 'Un conseiller dédié'],
     [Translate, 'Préparation TCF', 'Avec la plateforme TCF Express'],
     [ShieldCheck, 'Conseils honnêtes', 'Pas de fausses promesses'],
@@ -225,12 +227,35 @@ function Offices() {
   )
 }
 
+function ToolsStrip() {
+  const list = tools.filter((t) => !t.path)
+  return (
+    <section className="container-x mt-28">
+      <Reveal><SectionTitle title="Faites le point en quelques minutes" text="Nos outils gratuits calculent vos points et votre budget avec les barèmes officiels. Résultat immédiat." /></Reveal>
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {list.map((t, i) => (
+          <Reveal key={t.slug} delay={i * 0.06}>
+            <Link to={`/outils/${t.slug}`} className={`group flex h-full flex-col gap-6 rounded-3xl p-6 transition duration-300 hover:-translate-y-1 ${i === 3 ? 'bg-maple-500 text-white' : 'card'}`}>
+              <t.icon size={32} weight="duotone" className={i === 3 ? 'text-white' : 'text-brand-600 dark:text-brand-300'} />
+              <div className="mt-auto">
+                <h3 className={`text-lg font-semibold ${i === 3 ? '' : 'text-brand-800 dark:text-white'}`}>{t.title}</h3>
+                <p className={`mt-1 text-sm ${i === 3 ? 'text-white/85' : 'muted'}`}>{t.short}</p>
+              </div>
+            </Link>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 export default function Home() {
   return (
     <>
       <Hero />
       <Promises />
       <ServicesBento />
+      <ToolsStrip />
       <TcfPromo />
       <Process />
       <Why />

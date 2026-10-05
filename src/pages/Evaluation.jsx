@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { ArrowLeft, ArrowRight, WhatsappLogo, EnvelopeSimple, CheckCircle, ArrowUpRight } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowRight, WhatsappLogo, CheckCircle, ArrowUpRight } from '@phosphor-icons/react'
 import { PageHeader } from '../components/ui.jsx'
 import { services, getService } from '../data/services.js'
 import { site, whatsappLink } from '../config/site.js'
@@ -21,7 +21,7 @@ const experiences = ['Aucune', 'Moins d’un an', '1 à 2 ans', '3 à 5 ans', 'P
 const frLevels = ['Débutant', 'Intermédiaire', 'Avancé', 'Langue maternelle / courant']
 const enLevels = ['Aucun', 'Débutant', 'Intermédiaire', 'Avancé']
 
-const empty = { goal: '', age: '', education: '', experience: '', marital: '', french: '', tcf: '', english: '', name: '', email: '', phone: '', country: '', message: '', consent: false }
+const empty = { goal: '', age: '', education: '', experience: '', marital: '', french: '', tcf: '', english: '', }
 
 function Choice({ options, value, onChange, name }) {
   return (
@@ -73,7 +73,7 @@ export default function Evaluation() {
   const [done, setDone] = useState(false)
   const set = (k) => (v) => setD((p) => ({ ...p, [k]: v?.target ? (v.target.type === 'checkbox' ? v.target.checked : v.target.value) : v }))
 
-  const titles = ['Votre projet', 'Votre profil', 'Vos langues', 'Vos coordonnées']
+  const titles = ['Votre projet', 'Votre profil', 'Vos langues']
   const validate = () => {
     const e = {}
     if (step === 0 && !d.goal) e.goal = 'Choisissez votre objectif principal.'
@@ -83,32 +83,25 @@ export default function Evaluation() {
       if (!d.experience) e.experience = 'Indiquez votre expérience.'
     }
     if (step === 2 && !d.french) e.french = 'Indiquez votre niveau de français.'
-    if (step === 3) {
-      if (d.name.trim().length < 2) e.name = 'Indiquez votre nom complet.'
-      if (!/^\S+@\S+\.\S+$/.test(d.email)) e.email = 'Adresse e-mail invalide.'
-      if (d.phone.replace(/\D/g, '').length < 8) e.phone = 'Numéro de téléphone invalide.'
-      if (!d.consent) e.consent = 'Votre accord est nécessaire pour être recontacté.'
-    }
     setErrors(e)
     return Object.keys(e).length === 0
   }
-  const next = () => { if (validate()) { if (step < 3) setStep(step + 1); else setDone(true) } }
+  const next = () => { if (validate()) { if (step < 2) setStep(step + 1); else setDone(true) } }
 
   const recs = useMemo(() => recommend(d), [d])
   const summary = useMemo(() => {
     const goal = goals.find(([g]) => g === d.goal)?.[1]
     return [
-      'Bonjour Vision Consulting, voici ma demande d’évaluation :',
-      `Nom : ${d.name}`, `E-mail : ${d.email}`, `Téléphone : ${d.phone}`, d.country && `Pays de résidence : ${d.country}`,
+      'Bonjour Vision Consulting, voici mon profil (orientation rapide sur votre site) :',
       `Objectif : ${goal}`, `Âge : ${d.age}`, `Études : ${d.education}`, `Expérience : ${d.experience}`, d.marital && `Situation familiale : ${d.marital}`,
       `Français : ${d.french}`, d.tcf && `Test de français passé : ${d.tcf}`, d.english && `Anglais : ${d.english}`,
-      d.message && `Message : ${d.message}`,
+      recs.length && `Parcours suggérés : ${recs.map((r) => r.title).join(', ')}`,
     ].filter(Boolean).join('\n')
-  }, [d])
+  }, [d, recs])
 
   return (
     <>
-      <PageHeader title="Évaluation gratuite de votre profil" text="Quatre étapes, environ trois minutes. Vous obtenez une première orientation immédiate, puis la réponse d’un conseiller." />
+      <PageHeader title="Évaluation gratuite" text="Trois questions, une minute. Vous voyez immédiatement les parcours adaptés à votre profil, sans inscription." />
       <section className="container-x mt-12 max-w-3xl">
         <div className="card p-6 md:p-10">
           {!done ? (
@@ -116,7 +109,7 @@ export default function Evaluation() {
               <div className="flex gap-2" aria-hidden>
                 {titles.map((t, i) => <span key={t} className={`h-1.5 flex-1 rounded-full transition ${i <= step ? 'bg-maple-500' : 'bg-brand-100 dark:bg-white/10'}`} />)}
               </div>
-              <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-400">Étape {step + 1} sur 4</p>
+              <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-400">Étape {step + 1} sur 3</p>
               <h2 className="mt-1 text-2xl font-bold text-brand-800 dark:text-white">{titles[step]}</h2>
 
               <AnimatePresence mode="wait">
@@ -162,28 +155,10 @@ export default function Evaluation() {
                       )}
                     </>
                   )}
-                  {step === 3 && (
-                    <div className="grid gap-5 sm:grid-cols-2">
-                      <Field label="Nom complet" id="name" error={errors.name}><input id="name" className="field" autoComplete="name" value={d.name} onChange={set('name')} placeholder="Ex. : Aïcha Mbarga" /></Field>
-                      <Field label="E-mail" id="email" error={errors.email}><input id="email" type="email" className="field" autoComplete="email" value={d.email} onChange={set('email')} placeholder="vous@exemple.com" /></Field>
-                      <Field label="Téléphone / WhatsApp" id="phone" error={errors.phone}><input id="phone" type="tel" className="field" autoComplete="tel" value={d.phone} onChange={set('phone')} placeholder="+237 6 XX XX XX XX" /></Field>
-                      <Field label="Pays de résidence" id="country"><input id="country" className="field" autoComplete="country-name" value={d.country} onChange={set('country')} placeholder="Cameroun" /></Field>
-                      <div className="sm:col-span-2">
-                        <Field label="Message (facultatif)" id="msg"><textarea id="msg" rows="4" className="field" value={d.message} onChange={set('message')} placeholder="Précisez votre projet, vos délais..." /></Field>
-                      </div>
-                      <div className="sm:col-span-2">
-                        <label className="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
-                          <input type="checkbox" checked={d.consent} onChange={set('consent')} className="mt-0.5 size-5 accent-brand-600" />
-                          J’accepte d’être recontacté(e) par Vision Consulting au sujet de ma demande.
-                        </label>
-                        {errors.consent && <p className="mt-2 text-sm font-medium text-maple-600 dark:text-maple-400">{errors.consent}</p>}
-                      </div>
-                    </div>
-                  )}
 
                   <div className="flex items-center justify-between gap-3 border-t border-brand-900/8 pt-6 dark:border-white/10">
                     <button type="button" onClick={() => setStep(step - 1)} disabled={step === 0} className="btn-ghost disabled:invisible"><ArrowLeft /> Retour</button>
-                    <button type="submit" className={step === 3 ? 'btn-primary' : 'btn-dark'}>{step === 3 ? 'Voir mon orientation' : 'Continuer'} <ArrowRight weight="bold" /></button>
+                    <button type="submit" className={step === 2 ? 'btn-primary' : 'btn-dark'}>{step === 2 ? 'Voir mon résultat' : 'Continuer'} <ArrowRight weight="bold" /></button>
                   </div>
                 </motion.form>
               </AnimatePresence>
@@ -191,8 +166,8 @@ export default function Evaluation() {
           ) : (
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
               <CheckCircle size={48} weight="duotone" className="text-maple-500" />
-              <h2 className="mt-4 text-2xl font-bold text-brand-800 dark:text-white">Merci {d.name.split(' ')[0]}, voici une première orientation</h2>
-              <p className="muted mt-2">D’après vos réponses, ces parcours méritent d’être étudiés :</p>
+              <h2 className="mt-4 text-2xl font-bold text-brand-800 dark:text-white">Voici les parcours adaptés à votre profil</h2>
+              <p className="muted mt-2">D’après vos réponses, ces options méritent d’être étudiées :</p>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {(recs.length ? recs : services.slice(0, 2)).map((s) => (
                   <Link key={s.slug} to={`/services/${s.slug}`} className="flex items-center gap-3 rounded-2xl border border-brand-900/10 p-4 transition hover:border-brand-500/40 dark:border-white/10">
@@ -201,13 +176,22 @@ export default function Evaluation() {
                   </Link>
                 ))}
               </div>
-              <p className="mt-8 rounded-2xl bg-brand-50 p-4 text-sm text-brand-800 dark:bg-white/5 dark:text-slate-200">
-                Dernière étape : envoyez-nous votre demande pour qu’un conseiller analyse votre dossier en détail. Cette orientation automatique est indicative et ne remplace pas une étude personnalisée.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a href={whatsappLink(summary)} target="_blank" rel="noopener" className="btn bg-[#1fa855] text-white hover:bg-[#188a45]"><WhatsappLogo size={18} weight="fill" /> Envoyer par WhatsApp</a>
-                <a href={`mailto:${site.email}?subject=${encodeURIComponent('Demande d’évaluation - ' + d.name)}&body=${encodeURIComponent(summary)}`} className="btn-dark"><EnvelopeSimple size={18} /> Envoyer par e-mail</a>
+              <h3 className="mt-10 font-semibold text-brand-800 dark:text-white">Allez plus loin avec nos outils</h3>
+              <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                {[
+                  ['/outils/test-admissibilite', 'Test des 67 points'],
+                  ['/outils/calculateur-scg', 'Mon score SCG'],
+                  [`/outils/estimateur-cout${d.goal && d.goal !== 'inconnu' ? `?service=${d.goal}` : ''}`, 'Estimer mon budget'],
+                ].map(([to, l]) => (
+                  <Link key={to} to={to} className="flex items-center justify-between gap-2 rounded-2xl bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-100 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">{l} <ArrowRight className="shrink-0 text-maple-500" /></Link>
+                ))}
               </div>
+              <div className="mt-8 rounded-2xl border border-brand-900/10 p-5 dark:border-white/10">
+                <p className="font-semibold text-brand-800 dark:text-white">Envie d’un avis personnalisé ?</p>
+                <p className="muted mt-1 text-sm">Facultatif : envoyez ce résumé à un conseiller en un clic. Aucune inscription demandée.</p>
+                <a href={whatsappLink(summary)} target="_blank" rel="noopener" className="btn mt-4 bg-[#1fa855] text-white hover:bg-[#188a45]"><WhatsappLogo size={18} weight="fill" /> Parler à un conseiller</a>
+              </div>
+              <p className="mt-6 text-xs text-slate-500 dark:text-slate-400">Orientation automatique et indicative, qui ne remplace pas une étude personnalisée de votre dossier.</p>
               <button onClick={() => { setDone(false); setStep(0); setD(empty) }} className="mt-6 text-sm font-semibold text-slate-500 underline underline-offset-2">Recommencer</button>
             </motion.div>
           )}

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { Plus, ArrowRight, ArrowUpRight, WhatsappLogo, Brain, Exam, Calculator, Microphone } from '@phosphor-icons/react'
 import { Reveal } from './ui.jsx'
-import logo from '../assets/logo.webp'
+import tcfLogo from '../assets/tcf-express.webp'
+import markLight from '../assets/logo-mark-light.png'
 import { site, whatsappLink } from '../config/site.js'
 
 export function Accordion({ items }) {
@@ -42,7 +43,7 @@ export function CtaBand() {
       <Reveal>
         <div className="relative overflow-hidden rounded-[2rem] bg-maple-500 px-6 py-14 text-white md:px-14 md:py-16">
           <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:22px_22px]" aria-hidden />
-          <img src={logo} alt="" aria-hidden className="absolute -bottom-16 -right-10 hidden w-72 rotate-12 opacity-25 md:block" />
+          <img src={markLight} alt="" aria-hidden className="absolute -bottom-6 -right-10 hidden w-96 -rotate-6 opacity-20 md:block" />
           <div className="relative max-w-2xl">
             <h2 className="text-3xl font-bold leading-tight md:text-5xl">Prêt à préparer votre départ ?</h2>
             <p className="mt-4 max-w-[52ch] text-lg text-white/90">Dites-nous où vous en êtes. Nous vous répondons avec les options réalistes pour votre profil.</p>
@@ -75,7 +76,7 @@ export function TcfPromo() {
         <div className="relative grid gap-12 p-8 md:p-14 lg:grid-cols-[1.1fr_1fr] lg:items-center">
           <Reveal>
             <div className="flex items-center gap-4">
-              <img src={logo} alt="Logo TCF Express" className="size-16 rounded-full bg-white p-0.5" />
+              <img src={tcfLogo} alt="Logo TCF Express" className="size-16 rounded-full bg-white p-0.5" />
               <span className="font-display text-xl font-bold">TCF Express</span>
             </div>
             <h2 className="mt-8 text-3xl font-bold leading-tight md:text-5xl">Votre français, votre meilleur atout pour le Canada.</h2>

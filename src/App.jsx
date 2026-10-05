@@ -10,6 +10,11 @@ import Faq from './pages/Faq.jsx'
 import Contact from './pages/Contact.jsx'
 import Legal from './pages/Legal.jsx'
 import NotFound from './pages/NotFound.jsx'
+import ToolsHub from './pages/tools/ToolsHub.jsx'
+import Eligibility from './pages/tools/Eligibility.jsx'
+import Crs from './pages/tools/Crs.jsx'
+import Nclc from './pages/tools/Nclc.jsx'
+import Estimator from './pages/tools/Estimator.jsx'
 
 export default function App() {
   return (
@@ -22,6 +27,11 @@ export default function App() {
         <Route path="formation-tcf" element={<Tcf />} />
         <Route path="evaluation" element={<Evaluation />} />
         <Route path="faq" element={<Faq />} />
+        <Route path="outils" element={<ToolsHub />} />
+        <Route path="outils/test-admissibilite" element={<Eligibility />} />
+        <Route path="outils/calculateur-scg" element={<Crs />} />
+        <Route path="outils/calculateur-nclc" element={<Nclc />} />
+        <Route path="outils/estimateur-cout" element={<Estimator />} />
         <Route path="contact" element={<Contact />} />
         <Route path="mentions-legales" element={<Legal />} />
         <Route path="*" element={<NotFound />} />

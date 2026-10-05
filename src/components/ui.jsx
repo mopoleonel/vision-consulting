@@ -1,18 +1,22 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { Link } from 'react-router-dom'
-import logo from '../assets/logo.webp'
+import mark from '../assets/logo-mark.png'
+import markLight from '../assets/logo-mark-light.png'
 import { site } from '../config/site.js'
 
 export function Logo({ className = '', light = false }) {
   return (
     <Link to="/" className={`group flex items-center gap-3 ${className}`} aria-label={`${site.name}, accueil`}>
-      <img src={logo} alt="" width="44" height="44" className="size-11 rounded-full bg-white shadow-sm ring-1 ring-brand-900/10 transition group-hover:rotate-[-8deg]" />
+      <span className="relative block h-9 w-[68px] shrink-0">
+        <img src={mark} alt="" width="68" height="30" className={`absolute inset-0 m-auto w-full transition group-hover:scale-105 ${light ? 'hidden' : 'dark:hidden'}`} />
+        <img src={markLight} alt="" width="68" height="30" className={`absolute inset-0 m-auto w-full transition group-hover:scale-105 ${light ? '' : 'hidden dark:block'}`} />
+      </span>
       <span className="leading-none">
         <span className={`block font-display text-lg font-bold ${light ? 'text-white' : 'text-brand-700 dark:text-white'}`}>
           Vision <span className="text-maple-500">Consulting</span>
         </span>
         <span className={`mt-1 block text-[11px] font-medium ${light ? 'text-white/70' : 'text-slate-500 dark:text-slate-400'}`}>
-          Immigration Canada
+          Immigration Canada & TCF
         </span>
       </span>
     </Link>

@@ -2,7 +2,7 @@ import { ArrowUpRight, Headphones, BookOpenText, PencilLine, ChatsCircle, Target
 import { PageHeader, Reveal, SectionTitle } from '../components/ui.jsx'
 import { tcfFeatures } from '../components/Blocks.jsx'
 import { site } from '../config/site.js'
-import logo from '../assets/logo.webp'
+import logo from '../assets/tcf-express.webp'
 
 const epreuves = [
   { icon: Headphones, title: 'Compréhension orale', meta: '39 questions, environ 35 min', text: 'Comprendre des documents audio de la vie courante et professionnelle.' },

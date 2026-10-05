@@ -12,9 +12,9 @@ import { services } from '../data/services.js'
 const nav = [
   { to: '/', label: 'Accueil', end: true },
   { to: '/services', label: 'Services', menu: true },
+  { to: '/outils', label: 'Outils' },
   { to: '/formation-tcf', label: 'Formation TCF' },
   { to: '/a-propos', label: 'À propos' },
-  { to: '/faq', label: 'FAQ' },
   { to: '/contact', label: 'Contact' },
 ]
 
@@ -197,6 +197,7 @@ function Footer() {
             <li><Link to="/a-propos" className="hover:text-white">À propos</Link></li>
             <li><Link to="/formation-tcf" className="hover:text-white">Formation TCF</Link></li>
             <li><Link to="/evaluation" className="hover:text-white">Évaluation gratuite</Link></li>
+            <li><Link to="/outils" className="hover:text-white">Outils (SCG, NCLC, budget)</Link></li>
             <li><Link to="/faq" className="hover:text-white">FAQ</Link></li>
             <li><Link to="/contact" className="hover:text-white">Contact</Link></li>
             <li><Link to="/mentions-legales" className="hover:text-white">Mentions légales</Link></li>

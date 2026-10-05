@@ -4,7 +4,7 @@ import { PageHeader, Reveal, SectionTitle } from '../components/ui.jsx'
 import { CtaBand } from '../components/Blocks.jsx'
 import { values } from '../data/content.js'
 import { site, officialLinks } from '../config/site.js'
-import logo from '../assets/logo.webp'
+import logoFull from '../assets/logo-full.png'
 
 export default function About() {
   return (
@@ -15,7 +15,7 @@ export default function About() {
         <Reveal className="relative">
           <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-600 to-brand-900 p-10 md:p-14">
             <div className="absolute inset-0 [background:repeating-radial-gradient(circle_at_30%_40%,transparent_0_30px,rgb(255_255_255/0.05)_31px_32px)]" aria-hidden />
-            <img src={logo} alt="Logo TCF Express" className="relative mx-auto w-full max-w-xs rounded-full bg-white p-2 shadow-2xl" />
+            <div className="relative mx-auto max-w-md rounded-3xl bg-white p-8 shadow-2xl"><img src={logoFull} alt="Logo Vision Consulting" className="w-full" /></div>
           </div>
         </Reveal>
         <Reveal delay={0.1}>
