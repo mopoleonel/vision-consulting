@@ -64,6 +64,12 @@ export const honoraires = {
   'visa-visiteur': { label: 'Accompagnement visa visiteur', xaf: 200000 },
   'regroupement-familial': { label: 'Accompagnement parrainage familial', xaf: 500000 },
 }
+// Déduction sur vos honoraires quand le client a déjà fait une démarche (0 = pas de déduction)
+export const acquisDeductions = { tcf: 0, ede: 0, admission: 0, caqDone: 0, traductions: 0 }
+
+// Code d'accès à l'espace conseiller (simple verrou, pas une vraie sécurité)
+export const STAFF_PIN = '2026'
+
 export const honoraireMembreSupp = { label: 'Membre de famille supplémentaire (par personne)', xaf: 100000 }
 
 export const xaf = (n) => `${Math.round(n).toLocaleString('fr-FR').replace(/ | /g, ' ')} FCFA`

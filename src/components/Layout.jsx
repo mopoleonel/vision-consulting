@@ -201,6 +201,7 @@ function Footer() {
             <li><Link to="/faq" className="hover:text-white">FAQ</Link></li>
             <li><Link to="/contact" className="hover:text-white">Contact</Link></li>
             <li><Link to="/mentions-legales" className="hover:text-white">Mentions légales</Link></li>
+            <li><Link to="/espace-conseiller" className="hover:text-white">Espace conseiller</Link></li>
           </ul>
           <h3 className="mt-8 text-sm font-semibold text-white">Liens officiels</h3>
           <ul className="mt-4 space-y-2.5 text-sm text-white/70">

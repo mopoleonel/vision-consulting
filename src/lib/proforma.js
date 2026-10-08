@@ -27,7 +27,7 @@ export function proformaNumber() {
   return `PF-${String(d.getFullYear()).slice(2)}${p(d.getMonth() + 1)}${p(d.getDate())}-${Math.floor(1000 + Math.random() * 9000)}`
 }
 
-export async function generateProforma({ estimate, serviceTitle, client, adults, children }) {
+export async function generateProforma({ estimate, serviceTitle, client, adults, children, acquis = [], advisor = '', extraNotes = [] }) {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' })
   const W = doc.internal.pageSize.getWidth()
   const H = doc.internal.pageSize.getHeight()
@@ -76,6 +76,7 @@ export async function generateProforma({ estimate, serviceTitle, client, adults,
   const cl = [
     client.phone && `Téléphone : ${client.phone}`,
     client.email && `E-mail : ${client.email}`,
+    client.city && `Ville : ${client.city}`,
     `Procédure : ${serviceTitle}`,
     `Personnes concernées : ${adults} adulte(s)${children ? `, ${children} enfant(s)` : ''}`,
   ].filter(Boolean)
@@ -125,7 +126,11 @@ export async function generateProforma({ estimate, serviceTitle, client, adults,
   const SIGW = 56
   const LW = W - 2 * M - SIGW - 6
   const lines = [
-    ...(estimate.notes.length ? [['Remarques', estimate.notes]] : []),
+    ...((acquis.length || estimate.notes.length || extraNotes.length) ? [['Remarques', [
+      ...(acquis.length ? [`Déjà fourni par le client, non facturé : ${acquis.join(', ')}.`] : []),
+      ...extraNotes.filter(Boolean),
+      ...estimate.notes,
+    ]]] : []),
     ['Conditions', [`Proforma valable ${proformaInfo.validiteJours} jours à compter de sa date d'émission.`, ...proformaInfo.conditions]],
   ]
   const fs = 7, lh = 3.1
@@ -153,6 +158,7 @@ export async function generateProforma({ estimate, serviceTitle, client, adults,
   doc.setFontSize(7); doc.setTextColor(...GREY)
   doc.text(clean('Bon pour accord du client'), sx + SIGW / 2, y + 1.5, { align: 'center' })
   doc.text(clean('Cachet et signature du conseiller'), sx + SIGW / 2, y + 27.5, { align: 'center' })
+  if (advisor) { doc.setFontSize(7.5); doc.setTextColor(...INK); doc.text(clean(advisor), sx + SIGW / 2, y + 44, { align: 'center' }) }
 
   // Pied de page sur chaque page
   const pages = doc.getNumberOfPages()

@@ -5,7 +5,8 @@ import { PageHeader } from '../../components/ui.jsx'
 import { Card, Field, Select } from '../../components/form.jsx'
 import { ResultCta, Disclaimer, OtherTools } from '../../components/ToolKit.jsx'
 import { services, getService } from '../../data/services.js'
-import { buildEstimate, serviceOptions, defaultOptions } from '../../data/estimator.js'
+import { buildEstimate, defaultOptions, questionsFor, acquisList } from '../../data/estimator.js'
+import Questionnaire from '../../components/Questionnaire.jsx'
 import { xaf, cad, CAD_TO_XAF, RATE_DATE } from '../../config/tarifs.js'
 
 function Stepper({ label, value, onChange, min, max }) {
@@ -41,7 +42,7 @@ export default function Estimator() {
     setState('busy')
     try {
       const { generateProforma } = await import('../../lib/proforma.js')
-      const n = await generateProforma({ estimate: est, serviceTitle: service.title, client, adults, children })
+      const n = await generateProforma({ estimate: est, serviceTitle: service.title, client, adults, children, acquis: acquisList(slug, options) })
       setNumber(n); setState('done')
     } catch (e) {
       console.error(e); setState('error')
@@ -65,18 +66,14 @@ export default function Estimator() {
                 <Stepper label="Enfants à charge" value={children} onChange={setChildren} min={0} max={6} />
               </div>
             )}
-            {Object.keys(serviceOptions[slug] || {}).length > 0 && (
-              <fieldset className="grid gap-2">
-                <legend className="field-label mb-2">À inclure dans l’estimation</legend>
-                {Object.entries(serviceOptions[slug]).map(([k, [label]]) => (
-                  <label key={k} className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-300 px-4 py-3 text-sm text-ink transition hover:border-brand-400 dark:border-white/15 dark:text-slate-100">
-                    <input type="checkbox" checked={!!options[k]} onChange={(e) => setOptions({ ...options, [k]: e.target.checked })} className="size-5 accent-brand-600" />
-                    {label}
-                  </label>
-                ))}
-              </fieldset>
-            )}
           </Card>
+
+          {questionsFor(slug).length > 0 && (
+            <Card title="Où en êtes-vous ?">
+              <p className="muted -mt-3 text-sm">Répondez à ces questions : ce que vous avez déjà est retiré automatiquement de votre devis.</p>
+              <Questionnaire slug={slug} options={options} onChange={setOptions} />
+            </Card>
+          )}
 
           <Card title="Détail de l’estimation">
             {est.groups.map((g) => (
@@ -86,7 +83,7 @@ export default function Estimator() {
                   {g.lines.map((l) => (
                     <li key={l.label} className="flex items-start justify-between gap-4 py-2.5 text-sm">
                       <span className="text-slate-700 dark:text-slate-200">{l.label}{l.qty > 1 && <span className="text-slate-500"> × {l.qty}</span>}{l.cad != null && <span className="block text-xs text-slate-500">{cad(l.cad)}{l.qty > 1 ? ' chacun' : ''}</span>}</span>
-                      <span className="shrink-0 font-semibold text-brand-800 dark:text-white">{xaf(est.toXaf(l))}</span>
+                      <span className={`shrink-0 font-semibold ${est.toXaf(l) < 0 ? 'text-brand-600 dark:text-brand-200' : 'text-brand-800 dark:text-white'}`}>{xaf(est.toXaf(l))}</span>
                     </li>
                   ))}
                 </ul>

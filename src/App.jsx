@@ -15,6 +15,7 @@ import Eligibility from './pages/tools/Eligibility.jsx'
 import Crs from './pages/tools/Crs.jsx'
 import Nclc from './pages/tools/Nclc.jsx'
 import Estimator from './pages/tools/Estimator.jsx'
+import Staff from './pages/Staff.jsx'
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="outils/calculateur-scg" element={<Crs />} />
         <Route path="outils/calculateur-nclc" element={<Nclc />} />
         <Route path="outils/estimateur-cout" element={<Estimator />} />
+        <Route path="espace-conseiller" element={<Staff />} />
         <Route path="contact" element={<Contact />} />
         <Route path="mentions-legales" element={<Legal />} />
         <Route path="*" element={<NotFound />} />
