@@ -16,9 +16,7 @@ const DOCS = [['passport', 'Passeport (ou carte d’identité nationale)'], ['bi
 
 function buildSteps(a) {
   const fr = a.lang !== 'en'
-  const n = a.family || 1
-  const total = qma.funds[Math.min(n, 6)]
-  const own = total - qma.bourseYearly
+  const own = qma.funds[1] - qma.bourseYearly // 24 617 $ exigés - 14 000 $ couverts par la bourse = 10 617 $
   return [
     { id: 'age', type: 'yn', q: 'Avez-vous 18 ans ou plus ?' },
     { id: 'nat', type: 'yn', q: 'Avez-vous la nationalité française ou canadienne ?' },
@@ -35,9 +33,7 @@ function buildSteps(a) {
         ? [['test', 'Test reconnu de moins de 2 ans (TCF, TEF, TEFAQ...) avec au moins B2 dans les 4 compétences'], ['dipl', 'Diplôme d’études supérieures de 3 ans ou plus, entièrement en français'], ['inscrit', 'Je suis inscrit(e) à un test, résultat attendu avant la date limite'], ['b1', 'J’ai un test, mais en dessous de B2 dans au moins une compétence'], ['aucun', 'Aucune preuve pour le moment']]
         : [['test', 'TOEFL iBT ou IELTS de moins de 2 ans, au moins B2 dans les 4 compétences'], ['dipl', 'Diplôme d’études supérieures de 3 ans ou plus, entièrement en anglais'], ['inscrit', 'Je suis inscrit(e) à un test, résultat attendu avant la date limite'], ['b1', 'J’ai un test, mais en dessous de B2 dans au moins une compétence'], ['aucun', 'Aucune preuve pour le moment']],
     },
-    { id: 'family', type: 'count', q: 'Combien de personnes partiront au Québec, vous compris ?', hint: 'Le montant de la bourse ne change pas avec la taille de la famille, mais la capacité financière exigée augmente.' },
-    { id: 'funds', type: 'yn', q: `Pouvez-vous prouver au moins ${cadFmt(own)} (environ ${xaf(own * CAD_TO_XAF)}) disponibles pour votre projet ?`, hint: `Exigence pour ${n} personne(s) : ${cadFmt(total)} pour un an, dont environ ${cadFmt(qma.bourseYearly)} couverts par la bourse. Relevés bancaires ou lettre de banque, jusqu’à deux garants acceptés.` },
-    ...(a.funds ? [{ id: 'fundsFull', type: 'yn', q: `Pouvez-vous prouver la totalité, soit ${cadFmt(total)} (environ ${xaf(total * CAD_TO_XAF)}) ?`, hint: 'Cela permet aussi de viser l’exemption des droits de scolarité seule, si la bourse n’est pas obtenue.' }] : []),
+    { id: 'funds', type: 'yn', q: `Pouvez-vous prouver au moins ${cadFmt(own)} (environ ${xaf(own * CAD_TO_XAF)}) disponibles pour votre projet ?`, hint: 'C’est le montant minimum exigé par le concours pour un boursier. Il se prouve avec des relevés bancaires récents ou une lettre de banque, à votre nom ou à celui d’un ou deux garants.' },
     { id: 'link', type: 'choice', q: 'Avez-vous déjà un lien avec le métier visé ?', options: [['exp', 'Oui, une expérience professionnelle dans ce domaine'], ['form', 'Oui, une formation ou des études proches'], ['interest', 'Non, mais un projet réfléchi et motivé'], ['none', 'Non, je découvre ce métier']] },
     { id: 'docs', type: 'multi', q: 'Quels documents avez-vous déjà ?', options: DOCS },
     { id: 'contact', type: 'contact', q: 'Dernière étape : vos coordonnées' },
@@ -58,7 +54,7 @@ function evaluate(a) {
   if (a.langProof === 'inscrit') conditions.push(`Le résultat du test (B2 minimum dans les 4 compétences) doit être déposé avant la ${qma.frenchResultDeadline}.`)
   if (a.langProof === 'b1') conditions.push('Le niveau B2 est exigé dans chacune des 4 compétences : un nouveau test est nécessaire avant la date limite.')
   if (a.langProof === 'aucun') conditions.push('Une preuve de langue (test B2 dans les 4 compétences ou diplôme supérieur de 3 ans dans la langue) est obligatoire.')
-  if (a.funds === false) blockers.push('La capacité financière minimale exigée n’est pas atteinte.')
+  if (a.funds === false) blockers.push('Il faut pouvoir prouver au moins 10 617 $ CA (environ ' + xaf(10617 * CAD_TO_XAF) + ') disponibles pour le projet.')
   if (isClosed()) conditions.push(`Les inscriptions ${qma.edition} sont closes : le dossier pourra être préparé pour la prochaine édition.`)
 
   // Force indicative du dossier, inspirée des critères de sélection publiés (motivation 30 %, parcours 30 %, qualité 20 %, références 15 %, prix 5 %)
@@ -72,7 +68,6 @@ function evaluate(a) {
 
   if (a.program && a.program !== 'autre' && a.program !== 'nsp') strengths.push('Formation priorisée par le Québec (au moins 50 % des bourses lui sont réservées).')
   if (a.link === 'exp' || a.link === 'form') strengths.push('Lien avec le métier visé, un atout pour la partie motivation (30 % de l’évaluation).')
-  if (a.fundsFull) strengths.push('Capacité financière suffisante pour viser aussi l’exemption des droits de scolarité seule.')
   if (!docs.includes('refs')) improve.push('Trouver deux personnes pour les formulaires de référence (15 % de l’évaluation).')
   if (!docs.includes('diplomas')) improve.push('Rassembler diplômes et relevés de notes de chaque niveau.')
   if (!docs.includes('passport') || !docs.includes('birth')) improve.push('Préparer passeport (même expiré) et acte de naissance.')
@@ -90,7 +85,7 @@ export default function BoursesQma() {
   const office = site.offices.find((o) => o.city.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '') === (params.get('bureau') || '').toLowerCase())
   const waNumber = office?.whatsapp || site.whatsapp
   const reduce = useReducedMotion()
-  const [a, setA] = useState({ family: 1, docs: [] })
+  const [a, setA] = useState({ docs: [] })
   const [step, setStep] = useState(-1)
   const [contact, setContact] = useState({ name: '', phone: '', city: '' })
   const [err, setErr] = useState('')
@@ -120,7 +115,7 @@ export default function BoursesQma() {
     `Niveau d’études : ${label(EDU, a.edu)}`,
     `Langue d’études : ${a.lang === 'en' ? 'Anglais' : 'Français'} | Preuve : ${a.langProof || '-'}`,
     `Formation visée : ${a.program === 'autre' ? 'Autre formation' : a.program === 'nsp' ? 'Pas encore choisie' : a.program || '-'}`,
-    `Personnes : ${a.family} | Fonds minimum : ${a.funds ? 'oui' : 'non'}${a.fundsFull ? ' (totalité aussi)' : ''}`,
+    `Capacité financière (10 617 $ CA) : ${a.funds ? 'oui' : 'non'}`,
     `Documents prêts : ${(a.docs || []).map((d) => label(DOCS, d).split(' (')[0]).join(', ') || 'aucun'}`,
     res.blockers.length && `Bloquant : ${res.blockers.join(' ')}`,
     res.conditions.length && `Conditions : ${res.conditions.join(' ')}`,
@@ -218,18 +213,6 @@ export default function BoursesQma() {
                   </>
                 )}
 
-                {!done && cur?.type === 'count' && (
-                  <>
-                    <h2 className="text-2xl font-bold leading-snug text-brand-800 md:text-3xl dark:text-white">{cur.q}</h2>
-                    {cur.hint && <p className="muted mt-3 text-sm">{cur.hint}</p>}
-                    <div className="mt-8 grid grid-cols-3 gap-3 sm:grid-cols-6">
-                      {[1, 2, 3, 4, 5, 6].map((n) => (
-                        <button key={n} type="button" onClick={() => set('family', n)} className={`${btn} text-center font-display text-2xl ${a.family === n ? 'border-brand-600 bg-brand-50 dark:bg-white/10' : 'border-slate-300 dark:border-white/15'} text-ink dark:text-slate-100`}>{n}{n === 6 ? '+' : ''}</button>
-                      ))}
-                    </div>
-                  </>
-                )}
-
                 {!done && cur?.type === 'multi' && (
                   <>
                     <h2 className="text-2xl font-bold leading-snug text-brand-800 md:text-3xl dark:text-white">{cur.q}</h2>
@@ -296,7 +279,7 @@ export default function BoursesQma() {
                       Le dépôt de candidature est gratuit et doit être fait par le candidat lui-même sur la plateforme officielle : Éducation internationale indique privilégier les candidatures déposées personnellement. Vision Consulting vous conseille et vous aide à préparer vos documents, sans déposer à votre place. Test indicatif, non affilié à Québec Métiers d’avenir.{' '}
                       <a href={qma.links.inscription} target="_blank" rel="noopener" className="font-semibold underline">Page officielle <ArrowUpRight className="inline" /></a>
                     </p>
-                    <button type="button" onClick={() => { setStep(-1); setA({ family: 1, docs: [] }) }} className="mt-4 text-sm font-semibold text-slate-500 underline underline-offset-2">Refaire le test</button>
+                    <button type="button" onClick={() => { setStep(-1); setA({ docs: [] }) }} className="mt-4 text-sm font-semibold text-slate-500 underline underline-offset-2">Refaire le test</button>
                   </>
                 )}
               </motion.div>

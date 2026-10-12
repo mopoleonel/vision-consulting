@@ -21,8 +21,9 @@ export const qma = {
     faq: 'https://eiappblob.blob.core.windows.net/qmabourses/fr_bourses_faq.pdf',
     formations: 'https://bourses-805928eb7b-endpoint.azureedge.net/blobbourses805928eb7b/wp-content/uploads/2025/06/FR-EN-RegionsFormationsPriorisees.pdf',
   },
-  // Capacité financière exigée pour 1 an selon le nombre de personnes (CAD, depuis le 1er janvier 2026)
-  funds: { 1: 24617, 2: 34814, 3: 42638, 4: 49234, 5: 55045, 6: 60299 },
+  // Capacité financière exigée pour 1 an, personne seule (CAD, depuis le 1er janvier 2026).
+  // Le boursier doit prouver ce montant moins la bourse annuelle (14 000 $), soit 10 617 $.
+  funds: { 1: 24617 },
   regions: ['Bas-Saint-Laurent', 'Saguenay-Lac-Saint-Jean', 'Mauricie', 'Estrie', 'Abitibi-Témiscamingue', 'Côte-Nord', 'Nord-du-Québec', 'Gaspésie-Îles-de-la-Madeleine', 'Chaudière-Appalaches', 'Centre-du-Québec'],
   programs: {
     'Santé': ['Assistance à la personne en établissement et à domicile', 'Assistance technique en pharmacie', 'Retraitement des dispositifs médicaux', 'Santé, assistance et soins infirmiers'],
