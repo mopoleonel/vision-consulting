@@ -9,7 +9,6 @@ import { PageHeader } from '../../components/ui.jsx'
 import { Field } from '../../components/form.jsx'
 import { OtherTools } from '../../components/ToolKit.jsx'
 import { site, whatsappLink } from '../../config/site.js'
-import { CAD_TO_XAF, xaf } from '../../config/tarifs.js'
 import { qma, isClosed, isOpen, SEC3_NOTE } from '../../data/qma.js'
 
 const cadFmt = (n) => `${n.toLocaleString('fr-FR').replace(/[  ]/g, ' ')} $ CA`
@@ -36,7 +35,7 @@ function buildSteps(a) {
         ? [['test', 'Test reconnu de moins de 2 ans (TCF, TEF, TEFAQ...) avec au moins B2 dans les 4 compétences'], ['dipl', 'Diplôme d’études supérieures de 3 ans ou plus, entièrement en français'], ['inscrit', 'Je suis inscrit(e) à un test, résultat attendu avant la date limite'], ['b1', 'J’ai un test, mais en dessous de B2 dans au moins une compétence'], ['aucun', 'Aucune preuve pour le moment']]
         : [['test', 'TOEFL iBT ou IELTS de moins de 2 ans, au moins B2 dans les 4 compétences'], ['dipl', 'Diplôme d’études supérieures de 3 ans ou plus, entièrement en anglais'], ['inscrit', 'Je suis inscrit(e) à un test, résultat attendu avant la date limite'], ['b1', 'J’ai un test, mais en dessous de B2 dans au moins une compétence'], ['aucun', 'Aucune preuve pour le moment']],
     },
-    { id: 'funds', type: 'yn', q: `Pouvez-vous prouver au moins ${cadFmt(own)} (environ ${xaf(own * CAD_TO_XAF)}) disponibles pour votre projet ?`, hint: 'C’est le montant minimum exigé par le concours pour un boursier. Il se prouve avec des relevés bancaires récents ou une lettre de banque, à votre nom ou à celui d’un ou deux garants.' },
+    { id: 'funds', type: 'yn', q: `Pouvez-vous prouver au moins ${cadFmt(own)} (${qma.fundsXafRound}) disponibles pour votre projet ?`, hint: 'C’est le montant minimum exigé par le concours pour un boursier. Il se prouve avec des relevés bancaires récents ou une lettre de banque, à votre nom ou à celui d’un ou deux garants.' },
     { id: 'link', type: 'choice', q: 'Avez-vous déjà un lien avec le métier visé ?', options: [['exp', 'Oui, une expérience professionnelle dans ce domaine'], ['form', 'Oui, une formation ou des études proches'], ['interest', 'Non, mais un projet réfléchi et motivé'], ['none', 'Non, je découvre ce métier']] },
     { id: 'docs', type: 'multi', q: 'Quels documents avez-vous déjà ?', options: DOCS },
     { id: 'contact', type: 'contact', q: 'Dernière étape : vos coordonnées' },
@@ -57,7 +56,7 @@ function evaluate(a) {
   if (a.langProof === 'inscrit') conditions.push(`Le résultat du test (B2 minimum dans les 4 compétences) doit être déposé avant la ${qma.frenchResultDeadline}.`)
   if (a.langProof === 'b1') conditions.push('Le niveau B2 est exigé dans chacune des 4 compétences : un nouveau test est nécessaire avant la date limite.')
   if (a.langProof === 'aucun') conditions.push('Une preuve de langue (test B2 dans les 4 compétences ou diplôme supérieur de 3 ans dans la langue) est obligatoire.')
-  if (a.funds === false) blockers.push('Il faut pouvoir prouver au moins 10 617 $ CA (environ ' + xaf(10617 * CAD_TO_XAF) + ') disponibles pour le projet.')
+  if (a.funds === false) blockers.push(`Il faut pouvoir prouver au moins 10 617 $ CA (${qma.fundsXafRound}) disponibles pour le projet.`)
   if (isClosed()) conditions.push(`Les inscriptions ${qma.edition} sont closes : le dossier pourra être préparé pour la prochaine édition.`)
 
   // Force indicative du dossier, inspirée des critères de sélection publiés (motivation 30 %, parcours 30 %, qualité 20 %, références 15 %, prix 5 %)
@@ -122,7 +121,7 @@ export default function BoursesQma({ standalone = false }) {
     `Niveau d’études : ${label(EDU, a.edu)}`,
     `Langue d’études : ${a.lang === 'en' ? 'Anglais' : 'Français'} | Preuve : ${a.langProof || '-'}`,
     `Formation visée : ${a.program === 'autre' ? 'Autre formation' : a.program === 'nsp' ? 'Pas encore choisie' : a.program || '-'}`,
-    `Capacité financière (10 617 $ CA) : ${a.funds ? 'oui' : 'non'}`,
+    `Capacité financière (10 617 $ CA, ${qma.fundsXafRound}) : ${a.funds ? 'oui' : 'non'}`,
     `Documents prêts : ${(a.docs || []).map((d) => label(DOCS, d).split(' (')[0]).join(', ') || 'aucun'}`,
     res.blockers.length && `Bloquant : ${res.blockers.join(' ')}`,
     res.conditions.length && `Conditions : ${res.conditions.join(' ')}`,

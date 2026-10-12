@@ -24,6 +24,8 @@ export const qma = {
   // Capacité financière exigée pour 1 an, personne seule (CAD, depuis le 1er janvier 2026).
   // Le boursier doit prouver ce montant moins la bourse annuelle (14 000 $), soit 10 617 $.
   funds: { 1: 24617 },
+  // Montant affiché en FCFA : arrondi volontairement (le taux du dollar varie). 10 617 $ CA ≈ 4,4 à 4,5 millions FCFA.
+  fundsXafRound: 'environ 4 500 000 FCFA',
   regions: ['Bas-Saint-Laurent', 'Saguenay-Lac-Saint-Jean', 'Mauricie', 'Estrie', 'Abitibi-Témiscamingue', 'Côte-Nord', 'Nord-du-Québec', 'Gaspésie-Îles-de-la-Madeleine', 'Chaudière-Appalaches', 'Centre-du-Québec'],
   programs: {
     'Santé': ['Assistance à la personne en établissement et à domicile', 'Assistance technique en pharmacie', 'Retraitement des dispositifs médicaux', 'Santé, assistance et soins infirmiers'],
