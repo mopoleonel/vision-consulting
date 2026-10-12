@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
+import mark from '../../assets/logo-mark.png'
+import markLight from '../../assets/logo-mark-light.png'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArrowLeft, ArrowRight, CheckCircle, XCircle, WarningCircle, WhatsappLogo, LinkSimple, ShareNetwork, ArrowUpRight, GraduationCap, Info } from '@phosphor-icons/react'
 import { PageHeader } from '../../components/ui.jsx'
@@ -80,7 +82,7 @@ function evaluate(a) {
 
 const label = (opts, v) => opts.find(([k]) => k === v)?.[1] || '-'
 
-export default function BoursesQma() {
+export default function BoursesQma({ standalone = false }) {
   const [params] = useSearchParams()
   const office = site.offices.find((o) => o.city.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '') === (params.get('bureau') || '').toLowerCase())
   const waNumber = office?.whatsapp || site.whatsapp
@@ -97,7 +99,7 @@ export default function BoursesQma() {
   const set = (id, v, advance = true) => { setA((o) => ({ ...o, [id]: v })); if (advance) setStep((s) => s + 1) }
   const res = useMemo(() => evaluate(a), [a])
 
-  const shareUrl = typeof window !== 'undefined' ? window.location.href.split('#')[0] + '#/outils/bourses-qma' + (office ? `?bureau=${params.get('bureau')}` : '') : ''
+  const shareUrl = typeof window !== 'undefined' ? window.location.href.split('#')[0] + '#/test/bourses-qma' + (office ? `?bureau=${params.get('bureau')}` : '') : ''
   const share = async () => {
     try {
       if (navigator.share) await navigator.share({ title: 'Test d’éligibilité Bourses Québec Métiers d’avenir', url: shareUrl })
@@ -134,12 +136,28 @@ export default function BoursesQma() {
 
   return (
     <>
+      {standalone ? (
+        <header className="border-b border-brand-900/8 bg-white dark:border-white/8 dark:bg-brand-900/40">
+          <div className="container-x flex max-w-3xl items-center justify-between gap-4 py-4">
+            <span className="flex items-center gap-3">
+              <img src={mark} alt="" className="h-8 w-auto dark:hidden" /><img src={markLight} alt="" className="hidden h-8 w-auto dark:block" />
+              <span className="font-display text-lg font-bold text-brand-700 dark:text-white">Vision <span className="text-maple-500">Consulting</span></span>
+            </span>
+            <span className="hidden text-xs font-medium text-slate-500 sm:block">Test Bourses QMA {qma.edition}</span>
+          </div>
+          <div className="container-x max-w-3xl pb-8 pt-4">
+            <h1 className="text-3xl font-bold text-brand-800 md:text-4xl dark:text-white">Bourses Québec Métiers d’avenir</h1>
+            <p className="muted mt-3">Vérifiez en quelques minutes si vous pouvez candidater au concours de bourses d’excellence {qma.edition}.</p>
+          </div>
+        </header>
+      ) : (
       <PageHeader title="Bourses Québec Métiers d’avenir" text={`Vérifiez en quelques minutes si vous pouvez candidater au concours de bourses d’excellence ${qma.edition} pour une formation professionnelle au Québec.`}>
         <div className="mt-6 flex flex-wrap gap-2">
           <button type="button" onClick={share} className="btn-ghost"><ShareNetwork /> {copied ? 'Lien copié !' : 'Partager ce test'}</button>
           <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(shareUrl); setCopied(true); setTimeout(() => setCopied(false), 2500) } catch { /* rien */ } }} className="btn-ghost"><LinkSimple /> Copier le lien</button>
         </div>
       </PageHeader>
+      )}
 
       <section className="container-x mt-12 max-w-3xl">
         <div className="card overflow-hidden">
@@ -158,7 +176,7 @@ export default function BoursesQma() {
                     <GraduationCap size={44} weight="duotone" className="text-maple-500" />
                     <h2 className="mt-4 text-2xl font-bold text-brand-800 md:text-3xl dark:text-white">Bourse d’excellence et exemption des droits de scolarité</h2>
                     <ul className="mt-5 space-y-2 text-slate-700 dark:text-slate-200">
-                      <li className="flex gap-2"><CheckCircle weight="fill" className="mt-1 shrink-0 text-brand-600" /> Bourse de {qma.bourseRange} pour les frais de subsistance</li>
+                      <li className="flex gap-2"><CheckCircle weight="fill" className="mt-1 shrink-0 text-brand-600" /> Bourse {qma.bourseRange} pour les frais de subsistance</li>
                       <li className="flex gap-2"><CheckCircle weight="fill" className="mt-1 shrink-0 text-brand-600" /> Exemption des droits de scolarité et assurance maladie (RAMQ)</li>
                       <li className="flex gap-2"><CheckCircle weight="fill" className="mt-1 shrink-0 text-brand-600" /> Formations professionnelles (DEP) en santé, construction, industrie, aérospatiale...</li>
                     </ul>
@@ -279,6 +297,12 @@ export default function BoursesQma() {
                       Le dépôt de candidature est gratuit et doit être fait par le candidat lui-même sur la plateforme officielle : Éducation internationale indique privilégier les candidatures déposées personnellement. Vision Consulting vous conseille et vous aide à préparer vos documents, sans déposer à votre place. Test indicatif, non affilié à Québec Métiers d’avenir.{' '}
                       <a href={qma.links.inscription} target="_blank" rel="noopener" className="font-semibold underline">Page officielle <ArrowUpRight className="inline" /></a>
                     </p>
+                    {standalone && (
+                      <Link to="/" className="mt-8 flex items-center justify-between gap-4 rounded-2xl bg-brand-700 p-5 text-white transition hover:bg-brand-800">
+                        <span><span className="block font-display text-lg font-bold">Découvrir Vision Consulting</span><span className="block text-sm text-white/80">Nos services d’immigration, nos outils gratuits et la préparation au TCF.</span></span>
+                        <ArrowRight size={24} weight="bold" className="shrink-0" />
+                      </Link>
+                    )}
                     <button type="button" onClick={() => { setStep(-1); setA({ docs: [] }) }} className="mt-4 text-sm font-semibold text-slate-500 underline underline-offset-2">Refaire le test</button>
                   </>
                 )}
@@ -300,7 +324,7 @@ export default function BoursesQma() {
           <p className="mt-4 text-xs text-slate-500">Sources : <a className="underline" href={qma.links.formations} target="_blank" rel="noopener">liste officielle</a>, <a className="underline" href={qma.links.faq} target="_blank" rel="noopener">FAQ du concours</a>.</p>
         </details>
       </section>
-      <OtherTools current="bourses-qma" />
+      {standalone ? <p className="container-x max-w-3xl py-10 text-center text-xs text-slate-500">© {new Date().getFullYear()} Vision Consulting, Yaoundé et Bafoussam</p> : <OtherTools current="bourses-qma" />}
     </>
   )
 }

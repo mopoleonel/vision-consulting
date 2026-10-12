@@ -21,6 +21,8 @@ import BoursesQma from './pages/tools/BoursesQma.jsx'
 export default function App() {
   return (
     <Routes>
+      {/* Lien partageable : le test seul, sans le reste du site */}
+      <Route path="test/bourses-qma" element={<BoursesQma standalone />} />
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="a-propos" element={<About />} />
