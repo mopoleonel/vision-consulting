@@ -16,6 +16,7 @@ import Crs from './pages/tools/Crs.jsx'
 import Nclc from './pages/tools/Nclc.jsx'
 import Estimator from './pages/tools/Estimator.jsx'
 import Staff from './pages/Staff.jsx'
+import BoursesQma from './pages/tools/BoursesQma.jsx'
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="outils/calculateur-scg" element={<Crs />} />
         <Route path="outils/calculateur-nclc" element={<Nclc />} />
         <Route path="outils/estimateur-cout" element={<Estimator />} />
+        <Route path="outils/bourses-qma" element={<BoursesQma />} />
         <Route path="espace-conseiller" element={<Staff />} />
         <Route path="contact" element={<Contact />} />
         <Route path="mentions-legales" element={<Legal />} />

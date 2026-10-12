@@ -233,7 +233,7 @@ function ToolsStrip() {
   return (
     <section className="container-x mt-28">
       <Reveal><SectionTitle title="Faites le point en quelques minutes" text="Nos outils gratuits calculent vos points et votre budget avec les barèmes officiels. Résultat immédiat." /></Reveal>
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {list.map((t, i) => (
           <Reveal key={t.slug} delay={i * 0.06}>
             <Link to={`/outils/${t.slug}`} className={`group flex h-full flex-col gap-6 rounded-3xl p-6 transition duration-300 hover:-translate-y-1 ${i === 3 ? 'bg-maple-500 text-white' : 'card'}`}>

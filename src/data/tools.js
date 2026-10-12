@@ -1,4 +1,4 @@
-import { ListChecks, ChartBar, Translate, Receipt, Compass } from '@phosphor-icons/react'
+import { ListChecks, ChartBar, Translate, Receipt, Compass, GraduationCap } from '@phosphor-icons/react'
 
 export const tools = [
   { slug: 'orientation', icon: Compass, title: 'Évaluation gratuite', short: 'Quel programme pour votre profil ? Réponse en 1 minute.', path: '/evaluation' },
@@ -6,4 +6,5 @@ export const tools = [
   { slug: 'calculateur-scg', icon: ChartBar, title: 'Calculateur de score SCG', short: 'Votre score Entrée express, détaillé point par point.' },
   { slug: 'calculateur-nclc', icon: Translate, title: 'Calculateur NCLC', short: 'Convertissez vos notes TCF Canada en niveaux NCLC.' },
   { slug: 'estimateur-cout', icon: Receipt, title: 'Estimateur de coût', short: 'Budget de votre procédure et proforma PDF.' },
+  { slug: 'bourses-qma', icon: GraduationCap, title: 'Test Bourses Québec Métiers d’avenir', short: 'Êtes-vous admissible à la bourse et à l’exemption des droits de scolarité ?' },
 ]
