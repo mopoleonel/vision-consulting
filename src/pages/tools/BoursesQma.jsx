@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import mark from '../../assets/logo-mark.png'
 import markLight from '../../assets/logo-mark-light.png'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { ArrowLeft, ArrowRight, CheckCircle, XCircle, WarningCircle, WhatsappLogo, LinkSimple, ShareNetwork, ArrowUpRight, GraduationCap, Info } from '@phosphor-icons/react'
+import { AnimatePresence, animate, motion, useReducedMotion } from 'motion/react'
+import { Confetti } from '../../components/Celebrate.jsx'
+import { ArrowLeft, ArrowRight, CheckCircle, XCircle, WarningCircle, WhatsappLogo, LinkSimple, ShareNetwork, ArrowUpRight, GraduationCap, Info, Sparkle, Check } from '@phosphor-icons/react'
 import { PageHeader } from '../../components/ui.jsx'
 import { Field } from '../../components/form.jsx'
 import { OtherTools } from '../../components/ToolKit.jsx'
@@ -92,6 +93,10 @@ export default function BoursesQma({ standalone = false }) {
   const [contact, setContact] = useState({ name: '', phone: '', city: '' })
   const [err, setErr] = useState('')
   const [copied, setCopied] = useState(false)
+  const [analyzing, setAnalyzing] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [shown, setShown] = useState(0)
+  const navigate = useNavigate()
 
   const steps = useMemo(() => buildSteps(a), [a])
   const done = step >= steps.length
@@ -127,8 +132,29 @@ export default function BoursesQma({ standalone = false }) {
     e.preventDefault()
     if (contact.name.trim().length < 2) return setErr('Indiquez votre nom pour que le conseiller vous identifie.')
     if (contact.phone.replace(/\D/g, '').length < 8) return setErr('Indiquez un numéro de téléphone ou WhatsApp valide.')
-    setErr(''); setStep(steps.length)
+    setErr(''); setAnalyzing(true)
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })
+    setTimeout(() => { setAnalyzing(false); setStep(steps.length) }, reduce ? 300 : 2400)
   }
+
+  // Compteur animé de la force du dossier
+  useEffect(() => {
+    if (!done) { setShown(0); return }
+    if (reduce) { setShown(res.score); return }
+    const c = animate(0, res.score, { duration: 1.4, delay: 0.6, ease: 'easeOut', onUpdate: (v) => setShown(Math.round(v)) })
+    return () => c.stop()
+  }, [done, res.score, reduce])
+
+  // Lien partagé : après l'envoi WhatsApp, le candidat est redirigé une seule fois vers le site
+  const onSend = () => {
+    if (!standalone) return
+    setSent(true)
+    setTimeout(() => navigate('/', { replace: true }), 4000)
+  }
+
+  const pop = (i = 0) => reduce ? {} : { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.05 + i * 0.06, duration: 0.3 } }
+  const tap = reduce ? {} : { whileHover: { scale: 1.015 }, whileTap: { scale: 0.97 } }
+  const reveal = (i) => reduce ? {} : { initial: { opacity: 0, y: 18 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.45 + i * 0.12, duration: 0.4 } }
 
   const anim = reduce ? {} : { initial: { opacity: 0, x: 24 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: -24 }, transition: { duration: 0.25 } }
   const progress = step < 0 ? 0 : Math.round((Math.min(step, steps.length) / steps.length) * 100)
@@ -163,17 +189,28 @@ export default function BoursesQma({ standalone = false }) {
         <div className="card overflow-hidden">
           <div className="h-1.5 bg-brand-50 dark:bg-white/10" aria-hidden><div className="h-full bg-maple-500 transition-[width] duration-500" style={{ width: `${progress}%` }} /></div>
           <div className="p-6 md:p-10">
-            {step >= 0 && !done && (
+            {step >= 0 && !done && !analyzing && (
               <div className="mb-6 flex items-center justify-between text-sm">
                 <button type="button" onClick={() => setStep((s) => s - 1)} className="inline-flex items-center gap-1 font-semibold text-slate-500 hover:text-brand-600"><ArrowLeft /> Retour</button>
                 <span className="text-slate-500">Étape {step + 1} sur {steps.length}</span>
               </div>
             )}
             <AnimatePresence mode="wait">
-              <motion.div key={step < 0 ? 'intro' : done ? 'result' : cur.id} {...anim}>
+              <motion.div key={analyzing ? 'analyzing' : step < 0 ? 'intro' : done ? 'result' : cur.id} {...anim}>
+                {analyzing && (
+                  <div className="flex flex-col items-center py-12 text-center" role="status" aria-live="polite">
+                    <div className="relative size-24">
+                      <motion.span className="absolute inset-0 rounded-full border-4 border-brand-100 border-t-maple-500 dark:border-white/10 dark:border-t-maple-500" animate={reduce ? {} : { rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} />
+                      <motion.img src={mark} alt="" className="absolute inset-0 m-auto h-10 w-auto dark:hidden" animate={reduce ? {} : { scale: [1, 1.12, 1] }} transition={{ repeat: Infinity, duration: 1.2 }} />
+                      <motion.img src={markLight} alt="" className="absolute inset-0 m-auto hidden h-10 w-auto dark:block" animate={reduce ? {} : { scale: [1, 1.12, 1] }} transition={{ repeat: Infinity, duration: 1.2 }} />
+                    </div>
+                    <p className="mt-6 font-display text-xl font-bold text-brand-800 dark:text-white">Analyse de votre profil...</p>
+                    <AnalyzeSteps reduce={reduce} />
+                  </div>
+                )}
                 {step < 0 && (
                   <>
-                    <GraduationCap size={44} weight="duotone" className="text-maple-500" />
+                    <motion.span className="inline-block" animate={reduce ? {} : { y: [0, -6, 0], rotate: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}><GraduationCap size={48} weight="duotone" className="text-maple-500" /></motion.span>
                     <h2 className="mt-4 text-2xl font-bold text-brand-800 md:text-3xl dark:text-white">Bourse d’excellence et exemption des droits de scolarité</h2>
                     <ul className="mt-5 space-y-2 text-slate-700 dark:text-slate-200">
                       <li className="flex gap-2"><CheckCircle weight="fill" className="mt-1 shrink-0 text-brand-600" /> Bourse {qma.bourseRange} pour les frais de subsistance</li>
@@ -185,7 +222,7 @@ export default function BoursesQma({ standalone = false }) {
                         : isClosed() ? <>Les inscriptions {qma.edition} sont closes. Faites le test pour préparer la prochaine édition.</>
                           : <>Les inscriptions ouvrent le 16 septembre 2026 à midi (heure du Québec).</>}
                     </div>
-                    <button type="button" onClick={() => setStep(0)} className="btn-primary mt-8 px-6 py-3.5 text-base">Commencer le test <ArrowRight weight="bold" /></button>
+                    <motion.button {...tap} type="button" onClick={() => setStep(0)} className="btn-primary group mt-8 px-6 py-3.5 text-base">Commencer le test <ArrowRight weight="bold" className="transition group-hover:translate-x-1" /></motion.button>
                     <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">Environ 3 minutes. Votre résultat est ensuite envoyé à un conseiller sur WhatsApp.</p>
                   </>
                 )}
@@ -195,8 +232,8 @@ export default function BoursesQma({ standalone = false }) {
                     <h2 className="text-2xl font-bold leading-snug text-brand-800 md:text-3xl dark:text-white">{cur.q}</h2>
                     {cur.hint && <p className="muted mt-3 text-sm">{cur.hint}</p>}
                     <div className="mt-8 grid grid-cols-2 gap-3">
-                      {[[true, 'Oui'], [false, 'Non']].map(([v, l]) => (
-                        <button key={l} type="button" onClick={() => set(cur.id, v)} className={`${btn} text-center font-display text-xl ${a[cur.id] === v ? 'border-brand-600 bg-brand-50 dark:bg-white/10' : 'border-slate-300 dark:border-white/15'} text-ink dark:text-slate-100`}>{l}</button>
+                      {[[true, 'Oui'], [false, 'Non']].map(([v, l], i) => (
+                        <motion.button {...pop(i)} {...tap} key={l} type="button" onClick={() => set(cur.id, v)} className={`${btn} text-center font-display text-xl ${a[cur.id] === v ? 'border-brand-600 bg-brand-50 dark:bg-white/10' : 'border-slate-300 dark:border-white/15'} text-ink dark:text-slate-100`}>{l}</motion.button>
                       ))}
                     </div>
                   </>
@@ -207,8 +244,8 @@ export default function BoursesQma({ standalone = false }) {
                     <h2 className="text-2xl font-bold leading-snug text-brand-800 md:text-3xl dark:text-white">{cur.q}</h2>
                     {cur.hint && <p className="muted mt-3 text-sm">{cur.hint}</p>}
                     <div className="mt-6 grid gap-2">
-                      {cur.options.map(([v, l]) => (
-                        <button key={v} type="button" onClick={() => set(cur.id, v)} className={`${btn} ${a[cur.id] === v ? 'border-brand-600 bg-brand-50 dark:bg-white/10' : 'border-slate-300 dark:border-white/15'} text-ink dark:text-slate-100`}>{l}</button>
+                      {cur.options.map(([v, l], i) => (
+                        <motion.button {...pop(i)} {...tap} key={v} type="button" onClick={() => set(cur.id, v)} className={`${btn} ${a[cur.id] === v ? 'border-brand-600 bg-brand-50 dark:bg-white/10' : 'border-slate-300 dark:border-white/15'} text-ink dark:text-slate-100`}>{l}</motion.button>
                       ))}
                     </div>
                   </>
@@ -236,13 +273,13 @@ export default function BoursesQma({ standalone = false }) {
                     <h2 className="text-2xl font-bold leading-snug text-brand-800 md:text-3xl dark:text-white">{cur.q}</h2>
                     <p className="muted mt-3 text-sm">Cochez tout ce qui est déjà prêt.</p>
                     <div className="mt-6 grid gap-2">
-                      {cur.options.map(([v, l]) => {
+                      {cur.options.map(([v, l], i) => {
                         const on = a.docs.includes(v)
                         return (
-                          <label key={v} className={`flex cursor-pointer items-center gap-3 ${btn} ${on ? 'border-brand-600 bg-brand-50 dark:bg-white/10' : 'border-slate-300 dark:border-white/15'} text-ink dark:text-slate-100`}>
+                          <motion.label {...pop(i)} key={v} className={`flex cursor-pointer items-center gap-3 ${btn} ${on ? 'border-brand-600 bg-brand-50 dark:bg-white/10' : 'border-slate-300 dark:border-white/15'} text-ink dark:text-slate-100`}>
                             <input type="checkbox" className="size-5 accent-brand-600" checked={on} onChange={() => setA((o) => ({ ...o, docs: on ? o.docs.filter((d) => d !== v) : [...o.docs, v] }))} />
                             {l}
-                          </label>
+                          </motion.label>
                         )
                       })}
                     </div>
@@ -250,7 +287,7 @@ export default function BoursesQma({ standalone = false }) {
                   </>
                 )}
 
-                {!done && cur?.type === 'contact' && (
+                {!done && !analyzing && cur?.type === 'contact' && (
                   <form onSubmit={submitContact} noValidate>
                     <h2 className="text-2xl font-bold leading-snug text-brand-800 md:text-3xl dark:text-white">{cur.q}</h2>
                     <p className="muted mt-3 text-sm">Votre résultat s’affiche juste après, et vous pourrez l’envoyer en un clic à un conseiller sur WhatsApp.</p>
@@ -266,44 +303,47 @@ export default function BoursesQma({ standalone = false }) {
 
                 {done && (
                   <>
-                    {res.verdict === 'eligible' && <CheckCircle size={52} weight="duotone" className="text-brand-600 dark:text-brand-300" />}
-                    {res.verdict === 'conditional' && <WarningCircle size={52} weight="duotone" className="text-amber-500" />}
-                    {res.verdict === 'not' && <XCircle size={52} weight="duotone" className="text-maple-500" />}
-                    <p className="mt-3 text-sm font-medium text-slate-500">{contact.name}, voici votre résultat</p>
-                    <h2 className="mt-1 text-3xl font-bold text-brand-800 dark:text-white">{verdictText}</h2>
+                    {res.verdict === 'eligible' && !reduce && <Confetti />}
+                    <ResultHero verdict={res.verdict} reduce={reduce} />
+                    <motion.p {...reveal(0)} className="mt-4 text-sm font-medium text-slate-500">{contact.name}, voici votre résultat</motion.p>
+                    <motion.h2 {...reveal(0)} className={`mt-1 text-3xl font-bold md:text-4xl ${res.verdict === 'eligible' ? 'text-brand-700 dark:text-white' : res.verdict === 'conditional' ? 'text-amber-600 dark:text-amber-300' : 'text-maple-600 dark:text-maple-400'}`}>{verdictText}</motion.h2>
+                    <motion.p {...reveal(1)} className="muted mt-2">{{
+                      eligible: 'Félicitations ! Votre profil répond aux critères du concours. Un conseiller peut maintenant vous aider à monter un dossier gagnant.',
+                      conditional: 'Bonne nouvelle : vous pouvez candidater, à condition de régler les points ci-dessous. Un conseiller vous accompagne pour y arriver.',
+                      not: 'Ce n’est pas encore le bon moment, mais ce n’est pas une fin : un conseiller peut vous orienter vers la meilleure solution pour votre projet.',
+                    }[res.verdict]}</motion.p>
 
                     {res.verdict !== 'not' && (
-                      <div className="mt-5 rounded-2xl bg-brand-50 p-5 dark:bg-white/5">
-                        <div className="flex items-end justify-between"><p className="text-sm font-semibold text-brand-800 dark:text-white">Force estimée de votre dossier</p><p className="font-display text-3xl font-bold text-brand-700 dark:text-white">{res.score}<span className="text-base text-slate-500">/100</span></p></div>
-                        <div className="mt-3 h-2 overflow-hidden rounded-full bg-white dark:bg-white/10"><div className="h-full rounded-full bg-maple-500" style={{ width: `${res.score}%` }} /></div>
+                      <motion.div {...reveal(2)} className="mt-6 rounded-2xl bg-brand-50 p-5 dark:bg-white/5">
+                        <div className="flex items-end justify-between"><p className="text-sm font-semibold text-brand-800 dark:text-white">Force estimée de votre dossier</p><p className="font-display text-3xl font-bold tabular-nums text-brand-700 dark:text-white">{shown}<span className="text-base text-slate-500">/100</span></p></div>
+                        <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white dark:bg-white/10"><motion.div className="h-full rounded-full bg-gradient-to-r from-brand-600 to-maple-500" initial={{ width: reduce ? `${res.score}%` : 0 }} animate={{ width: `${res.score}%` }} transition={{ duration: 1.4, delay: 0.6, ease: 'easeOut' }} /></div>
                         <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Indicateur basé sur les critères publiés (motivation, parcours, qualité du dossier, références, prix). La sélection reste faite par les centres et par QMA.</p>
-                      </div>
+                      </motion.div>
                     )}
 
-                    {[['Points bloquants', res.blockers, 'text-maple-600 dark:text-maple-400', XCircle], ['Conditions à remplir', res.conditions, 'text-amber-600', WarningCircle], ['Vos atouts', res.strengths, 'text-brand-600 dark:text-brand-300', CheckCircle], ['À renforcer', res.improve, 'text-slate-500', Info]].map(([t, list, c, Icon]) => list.length > 0 && (
-                      <div key={t} className="mt-6">
+                    {[['Points bloquants', res.blockers, 'text-maple-600 dark:text-maple-400', XCircle], ['Conditions à remplir', res.conditions, 'text-amber-600', WarningCircle], ['Vos atouts', res.strengths, 'text-brand-600 dark:text-brand-300', CheckCircle], ['À renforcer', res.improve, 'text-slate-500', Info]].filter(([, list]) => list.length > 0).map(([t, list, c, Icon], i) => (
+                      <motion.div {...reveal(3 + i)} key={t} className="mt-6">
                         <h3 className="font-semibold text-brand-800 dark:text-white">{t}</h3>
                         <ul className="mt-2 space-y-2">{list.map((x) => <li key={x} className="flex gap-2 text-sm text-slate-700 dark:text-slate-200"><Icon weight="fill" className={`mt-0.5 shrink-0 ${c}`} size={18} />{x}</li>)}</ul>
-                      </div>
+                      </motion.div>
                     ))}
 
-                    <div className="mt-8 rounded-2xl border-2 border-[#1fa855]/40 p-5">
-                      <p className="font-semibold text-brand-800 dark:text-white">Envoyez votre résultat à un conseiller</p>
+                    <motion.div {...reveal(7)} className="mt-8 rounded-2xl border-2 border-[#1fa855]/40 bg-[#1fa855]/5 p-5">
+                      <p className="font-semibold text-brand-800 dark:text-white">Dernière étape : envoyez votre résultat à un conseiller</p>
                       <p className="muted mt-1 text-sm">Il analysera votre profil et vous aidera à préparer un dossier solide{office ? ` (bureau de ${office.city})` : ''}.</p>
-                      <a href={whatsappLink(summary, waNumber)} target="_blank" rel="noopener" className="btn mt-4 w-full bg-[#1fa855] py-4 text-base text-white hover:bg-[#188a45]"><WhatsappLogo size={22} weight="fill" /> Envoyer mon résultat sur WhatsApp</a>
-                    </div>
+                      <motion.a
+                        href={whatsappLink(summary, waNumber)} target="_blank" rel="noopener" onClick={onSend}
+                        animate={reduce || sent ? {} : { scale: [1, 1.03, 1], boxShadow: ['0 0 0 0 rgba(31,168,85,0.45)', '0 0 0 14px rgba(31,168,85,0)', '0 0 0 0 rgba(31,168,85,0)'] }}
+                        transition={{ repeat: Infinity, duration: 1.8, delay: 1.6 }}
+                        className="btn mt-4 w-full whitespace-normal bg-[#1fa855] px-4 py-4 text-center text-base leading-tight text-white hover:bg-[#188a45]"
+                      ><WhatsappLogo size={22} weight="fill" className="shrink-0" /> Envoyer mon résultat sur WhatsApp</motion.a>
+                    </motion.div>
 
-                    <p className="mt-6 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-                      Le dépôt de candidature est gratuit et doit être fait par le candidat lui-même sur la plateforme officielle : Éducation internationale indique privilégier les candidatures déposées personnellement. Vision Consulting vous conseille et vous aide à préparer vos documents, sans déposer à votre place. Test indicatif, non affilié à Québec Métiers d’avenir.{' '}
-                      <a href={qma.links.inscription} target="_blank" rel="noopener" className="font-semibold underline">Page officielle <ArrowUpRight className="inline" /></a>
-                    </p>
-                    {standalone && (
-                      <Link to="/" className="mt-8 flex items-center justify-between gap-4 rounded-2xl bg-brand-700 p-5 text-white transition hover:bg-brand-800">
-                        <span><span className="block font-display text-lg font-bold">Découvrir Vision Consulting</span><span className="block text-sm text-white/80">Nos services d’immigration, nos outils gratuits et la préparation au TCF.</span></span>
-                        <ArrowRight size={24} weight="bold" className="shrink-0" />
-                      </Link>
-                    )}
-                    <button type="button" onClick={() => { setStep(-1); setA({ docs: [] }) }} className="mt-4 text-sm font-semibold text-slate-500 underline underline-offset-2">Refaire le test</button>
+                    <motion.p {...reveal(8)} className="mt-6 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                      Le dépôt de candidature est gratuit et doit être fait par le candidat lui-même sur la plateforme officielle. Vision Consulting vous conseille et vous aide à préparer vos documents, sans déposer à votre place. Test indicatif, non affilié à Québec Métiers d’avenir.
+                      {!standalone && <>{' '}<a href={qma.links.inscription} target="_blank" rel="noopener" className="font-semibold underline">Page officielle <ArrowUpRight className="inline" /></a></>}
+                    </motion.p>
+                    {!standalone && <button type="button" onClick={() => { setStep(-1); setA({ docs: [] }) }} className="mt-4 text-sm font-semibold text-slate-500 underline underline-offset-2">Refaire le test</button>}
                   </>
                 )}
               </motion.div>
@@ -312,7 +352,7 @@ export default function BoursesQma({ standalone = false }) {
         </div>
       </section>
 
-      <section className="container-x mt-16 max-w-3xl">
+      {!standalone && <section className="container-x mt-16 max-w-3xl">
         <details className="card p-6">
           <summary className="cursor-pointer font-display text-lg font-bold text-brand-800 dark:text-white">Formations et régions priorisées {qma.edition}</summary>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -323,8 +363,59 @@ export default function BoursesQma({ standalone = false }) {
           </div>
           <p className="mt-4 text-xs text-slate-500">Sources : <a className="underline" href={qma.links.formations} target="_blank" rel="noopener">liste officielle</a>, <a className="underline" href={qma.links.faq} target="_blank" rel="noopener">FAQ du concours</a>.</p>
         </details>
-      </section>
+      </section>}
+
+      <AnimatePresence>
+        {sent && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[70] flex items-center justify-center bg-brand-900/85 p-6 backdrop-blur-sm" role="status" aria-live="polite">
+            <motion.div initial={reduce ? false : { scale: 0.85, y: 20 }} animate={{ scale: 1, y: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 20 }} className="w-full max-w-sm rounded-3xl bg-white p-8 text-center shadow-2xl dark:bg-brand-900">
+              <motion.span initial={reduce ? false : { scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 14, delay: 0.15 }} className="mx-auto grid size-16 place-items-center rounded-full bg-[#1fa855] text-white"><Check size={34} weight="bold" /></motion.span>
+              <p className="mt-5 font-display text-2xl font-bold text-brand-800 dark:text-white">Merci {contact.name.split(' ')[0]} !</p>
+              <p className="muted mt-2 text-sm">Votre résultat part vers notre conseiller sur WhatsApp. Nous vous conduisons maintenant sur le site de Vision Consulting.</p>
+              <div className="mt-6 h-1.5 overflow-hidden rounded-full bg-brand-50 dark:bg-white/10"><motion.div className="h-full bg-maple-500" initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 4, ease: 'linear' }} /></div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {standalone ? <p className="container-x max-w-3xl py-10 text-center text-xs text-slate-500">© {new Date().getFullYear()} Vision Consulting, Yaoundé et Bafoussam</p> : <OtherTools current="bourses-qma" />}
     </>
+  )
+}
+
+const ANALYZE = ['Vérification des critères d’admissibilité', 'Analyse de votre parcours scolaire', 'Calcul de la force de votre dossier']
+function AnalyzeSteps({ reduce }) {
+  return (
+    <ul className="mt-5 space-y-2 text-left text-sm">
+      {ANALYZE.map((t, i) => (
+        <motion.li key={t} initial={reduce ? false : { opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 + i * 0.65 }} className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
+          <motion.span initial={reduce ? false : { scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5 + i * 0.65, type: 'spring', stiffness: 400, damping: 15 }}><CheckCircle weight="fill" className="text-brand-600 dark:text-brand-300" size={18} /></motion.span>{t}
+        </motion.li>
+      ))}
+    </ul>
+  )
+}
+
+// Icône animée selon le verdict : célébration, encouragement ou réconfort
+function ResultHero({ verdict, reduce }) {
+  if (verdict === 'eligible') return (
+    <div className="relative inline-grid size-24 place-items-center">
+      {!reduce && [0, 1].map((i) => <motion.span key={i} className="absolute inset-0 rounded-full bg-brand-500/25" initial={{ scale: 0.6, opacity: 0.8 }} animate={{ scale: 1.9, opacity: 0 }} transition={{ repeat: Infinity, duration: 1.8, delay: i * 0.9 }} />)}
+      <motion.span initial={reduce ? false : { scale: 0, rotate: -120 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 220, damping: 12 }} className="relative grid size-20 place-items-center rounded-full bg-brand-600 text-white shadow-lg shadow-brand-600/30">
+        <svg viewBox="0 0 24 24" className="size-11" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><motion.path d="M5 12.5l4.5 4.5L19 7.5" initial={reduce ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.35, duration: 0.5 }} /></svg>
+      </motion.span>
+      {!reduce && [[-46, -30], [48, -26], [-40, 38], [44, 40]].map(([x, y], i) => (
+        <motion.span key={i} className="absolute text-amber-400" initial={{ scale: 0, x: 0, y: 0, opacity: 0 }} animate={{ scale: [0, 1.2, 1], x, y, opacity: [0, 1, 1] }} transition={{ delay: 0.5 + i * 0.08, duration: 0.6 }}><Sparkle weight="fill" size={18} /></motion.span>
+      ))}
+    </div>
+  )
+  if (verdict === 'conditional') return (
+    <motion.span initial={reduce ? false : { scale: 0 }} animate={reduce ? { scale: 1 } : { scale: 1, rotate: [0, -10, 10, -6, 6, 0] }} transition={{ scale: { type: 'spring', stiffness: 260, damping: 14 }, rotate: { delay: 0.4, duration: 0.8 } }} className="inline-grid size-20 place-items-center rounded-full bg-amber-100 text-amber-500 dark:bg-amber-400/15">
+      <WarningCircle size={48} weight="duotone" />
+    </motion.span>
+  )
+  return (
+    <motion.span initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="inline-grid size-20 place-items-center rounded-full bg-maple-50 text-maple-500 dark:bg-maple-500/15">
+      <XCircle size={48} weight="duotone" />
+    </motion.span>
   )
 }
