@@ -2,7 +2,7 @@ import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import logoUrl from '../assets/logo-full.png'
 import { site } from '../config/site.js'
-import { proformaInfo, CAD_TO_XAF, RATE_DATE, xaf, cad } from '../config/tarifs.js'
+import { proformaInfo, CAD_TO_XAF, RATE_DATE, xaf, cad, tranchesFor } from '../config/tarifs.js'
 
 const BLUE = [0, 49, 151]
 const RED = [222, 28, 26]
@@ -131,7 +131,7 @@ export async function generateProforma({ estimate, serviceTitle, client, adults,
       ...extraNotes.filter(Boolean),
       ...estimate.notes,
     ]]] : []),
-    ['Conditions', [`Proforma valable ${proformaInfo.validiteJours} jours à compter de sa date d'émission.`, ...proformaInfo.conditions]],
+    ['Conditions', [`Proforma valable ${proformaInfo.validiteJours} jours à compter de sa date d'émission.`, ...(tranchesFor(estimate.slug).length ? [`Honoraires payables en ${tranchesFor(estimate.slug).length} tranches : ${tranchesFor(estimate.slug).map(([q, m]) => `${xaf(m)} ${q.charAt(0).toLowerCase() + q.slice(1)}`).join(' ; ')}. Détail dans le contrat d'accompagnement.`] : []), ...proformaInfo.conditions]],
   ]
   const fs = 7, lh = 3.1
   const blockH = lines.reduce((t, [, arr]) => t + 4.5 + arr.reduce((u, l) => u + doc.setFontSize(fs).splitTextToSize(clean(`- ${l}`), LW).length * lh + 0.6, 0) + 1.5, 0)

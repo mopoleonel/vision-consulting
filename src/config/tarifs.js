@@ -17,7 +17,6 @@ export const proformaInfo = {
   niu: '', // ex. : M0123456789012A      (À COMPLÉTER)
   validiteJours: 30,
   conditions: [
-    '50 % des honoraires à la signature du contrat d’accompagnement, 50 % avant le dépôt du dossier.',
     'Les frais officiels (gouvernement, organismes, tests) sont payés directement aux organismes concernés, au nom du client.',
     'Les montants en FCFA des frais officiels sont calculés au taux indicatif indiqué et peuvent varier selon le taux du jour.',
     'Paiement accepté : espèces au bureau, Mobile Money (Orange Money / MTN MoMo) ou virement bancaire. Références communiquées par votre conseiller.',
@@ -52,25 +51,42 @@ export const localFees = {
 }
 
 // --- Honoraires Vision Consulting (FCFA) ---
-// Montants proposés par défaut, à ajuster selon votre politique commerciale.
-export const honoraires = {
-  'etudes-au-canada': { label: 'Accompagnement études au Canada (admission + CAQ/APP + permis d’études)', xaf: 450000 },
-  'entree-express': { label: 'Accompagnement résidence permanente Entrée express (profil + demande de RP)', xaf: 750000 },
-  'equivalence-de-diplomes': { label: 'Accompagnement équivalence de diplômes (EDE)', xaf: 100000 },
-  'permis-de-travail': { label: 'Accompagnement permis de travail', xaf: 500000 },
-  'mobilite-francophone': { label: 'Accompagnement Mobilité francophone', xaf: 450000 },
-  'immigration-quebec': { label: 'Accompagnement immigration au Québec (Arrima, CSQ, RP)', xaf: 650000 },
-  'programmes-provinciaux': { label: 'Accompagnement programme provincial (PCP)', xaf: 650000 },
-  'visa-visiteur': { label: 'Accompagnement visa visiteur', xaf: 200000 },
-  'regroupement-familial': { label: 'Accompagnement parrainage familial', xaf: 500000 },
+// Montants et tranches définis dans src/config/contrats.json (même source que les contrats PDF).
+// Règle : 500 000 FCFA maximum par procédure, en 3 tranches (150 000 / 150 000 / 200 000).
+import contratsData from './contrats.json'
+export const contrats = contratsData
+const sum = (a) => a.reduce((t, n) => t + n, 0)
+const honorLabels = {
+  'etudes-au-canada': 'Accompagnement études au Canada (admission + CAQ/APP + permis d’études)',
+  'entree-express': 'Accompagnement résidence permanente Entrée express (profil + demande de RP)',
+  'equivalence-de-diplomes': 'Accompagnement équivalence de diplômes (EDE)',
+  'permis-de-travail': 'Accompagnement permis de travail',
+  'mobilite-francophone': 'Accompagnement Mobilité francophone',
+  'immigration-quebec': 'Accompagnement immigration au Québec (Arrima, CSQ, RP)',
+  'programmes-provinciaux': 'Accompagnement programme provincial (PCP)',
+  'visa-visiteur': 'Accompagnement visa visiteur',
+  'regroupement-familial': 'Accompagnement parrainage familial',
 }
+export const honoraires = Object.fromEntries(Object.entries(honorLabels).map(([slug, label]) => [slug, { label: `${label} - forfait dossier complet`, xaf: sum(contratsData.procedures[slug].tranches) }]))
+
+// Échéancier des honoraires d'une procédure : [[quand, montant], ...]
+export function tranchesFor(slug) {
+  const p = contratsData.procedures[slug]
+  if (!p) return []
+  return p.etapes || [['À l’ouverture du dossier', p.tranches[0]], [p.selection, p.tranches[1]], [p.visa, p.tranches[2]]]
+}
+// Lien du contrat PDF à lire / télécharger (fichiers dans public/contrats/)
+export const contratUrl = (slug) => `${import.meta.env.BASE_URL}contrats/Contrat-${slug}-Vision-Consulting.pdf`
+export const contratQmaUrl = `${import.meta.env.BASE_URL}contrats/Contrat-Bourse-QMA-Vision-Consulting.pdf`
+
 // Déduction sur vos honoraires quand le client a déjà fait une démarche (0 = pas de déduction)
 export const acquisDeductions = { tcf: 0, ede: 0, admission: 0, caqDone: 0, traductions: 0 }
 
 // Code d'accès à l'espace conseiller (simple verrou, pas une vraie sécurité)
 export const STAFF_PIN = '2026'
 
-export const honoraireMembreSupp = { label: 'Membre de famille supplémentaire (par personne)', xaf: 100000 }
+// Honoraires forfaitaires : pas de supplément par membre de la famille (0 = ligne non affichée)
+export const honoraireMembreSupp = { label: 'Membre de famille supplémentaire (par personne)', xaf: 0 }
 
 export const xaf = (n) => `${Math.round(n).toLocaleString('fr-FR').replace(/ | /g, ' ')} FCFA`
 export const cad = (n) => `${n.toLocaleString('fr-FR').replace(/ | /g, ' ')} $ CA`

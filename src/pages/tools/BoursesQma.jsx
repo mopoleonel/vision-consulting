@@ -4,12 +4,13 @@ import mark from '../../assets/logo-mark.png'
 import markLight from '../../assets/logo-mark-light.png'
 import { AnimatePresence, animate, motion, useReducedMotion } from 'motion/react'
 import { Confetti } from '../../components/Celebrate.jsx'
-import { ArrowLeft, ArrowRight, CheckCircle, XCircle, WarningCircle, WhatsappLogo, LinkSimple, ShareNetwork, ArrowUpRight, GraduationCap, Info, Sparkle, Check } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowRight, CheckCircle, XCircle, WarningCircle, WhatsappLogo, LinkSimple, ShareNetwork, ArrowUpRight, GraduationCap, Info, Sparkle, Check, FilePdf } from '@phosphor-icons/react'
 import { PageHeader } from '../../components/ui.jsx'
 import { Field } from '../../components/form.jsx'
 import { OtherTools } from '../../components/ToolKit.jsx'
 import { site, whatsappLink } from '../../config/site.js'
 import { qma, isClosed, isOpen, SEC3_NOTE } from '../../data/qma.js'
+import { contratQmaUrl } from '../../config/tarifs.js'
 
 const cadFmt = (n) => `${n.toLocaleString('fr-FR').replace(/[  ]/g, ' ')} $ CA`
 const HEALTH = qma.programs['Santé']
@@ -338,7 +339,14 @@ export default function BoursesQma({ standalone = false }) {
                       ><WhatsappLogo size={22} weight="fill" className="shrink-0" /> Envoyer mon résultat sur WhatsApp</motion.a>
                     </motion.div>
 
-                    <motion.p {...reveal(8)} className="mt-6 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                    {res.verdict !== 'not' && (
+                      <motion.a {...reveal(8)} href={contratQmaUrl} target="_blank" rel="noopener" download className="mt-4 flex items-center gap-4 rounded-2xl border border-brand-900/10 p-4 transition hover:border-brand-500 hover:bg-brand-50 dark:border-white/10 dark:hover:bg-white/5">
+                        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-maple-50 text-maple-500 dark:bg-maple-500/15"><FilePdf size={24} weight="fill" /></span>
+                        <span><span className="block font-semibold text-brand-800 dark:text-white">Lire notre contrat d’accompagnement</span><span className="block text-sm text-slate-500 dark:text-slate-400">PDF à télécharger : honoraires, étapes et engagements</span></span>
+                      </motion.a>
+                    )}
+
+                    <motion.p {...reveal(9)} className="mt-6 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
                       Le dépôt de candidature est gratuit et doit être fait par le candidat lui-même sur la plateforme officielle. Vision Consulting vous conseille et vous aide à préparer vos documents, sans déposer à votre place. Test indicatif, non affilié à Québec Métiers d’avenir.
                       {!standalone && <>{' '}<a href={qma.links.inscription} target="_blank" rel="noopener" className="font-semibold underline">Page officielle <ArrowUpRight className="inline" /></a></>}
                     </motion.p>

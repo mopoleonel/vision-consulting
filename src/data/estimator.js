@@ -40,7 +40,7 @@ export function buildEstimate(slug, { adults = 1, children = 0, options = {} }) 
   const H = [], O = [], T = []
   const h = honoraires[slug]
   H.push({ label: h.label, qty: 1, xaf: h.xaf })
-  if (slug !== 'equivalence-de-diplomes' && n > 1) H.push({ label: honoraireMembreSupp.label, qty: n - 1, xaf: honoraireMembreSupp.xaf })
+  if (slug !== 'equivalence-de-diplomes' && n > 1 && honoraireMembreSupp.xaf) H.push({ label: honoraireMembreSupp.label, qty: n - 1, xaf: honoraireMembreSupp.xaf })
 
   const off = (f, qty = 1, note) => O.push({ label: f.label + (note ? ` - ${note}` : ''), qty, cad: f.cad })
   const loc = (f, qty = 1) => T.push({ label: f.label, qty, xaf: f.xaf })
@@ -106,6 +106,7 @@ export function buildEstimate(slug, { adults = 1, children = 0, options = {} }) 
   if (['entree-express', 'programmes-provinciaux', 'immigration-quebec'].includes(slug)) notes.push('La preuve de fonds exigée par IRCC (selon la taille de la famille) n’est pas une dépense mais doit être disponible.')
 
   return {
+    slug,
     groups: [
       { key: 'h', title: 'Honoraires Vision Consulting', lines: H, total: sum(H) },
       { key: 'o', title: 'Frais officiels (gouvernement)', lines: O, total: sum(O) },

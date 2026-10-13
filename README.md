@@ -40,3 +40,10 @@ Le site n'utilise pas de photos de stock. Pour en ajouter, placez vos images dan
 2. `src/config/tarifs.js` : vos honoraires réels (grille tarifaire), RCCM, NIU.
 3. `src/config/site.js` : vrai e-mail et liens des réseaux sociaux.
 4. `src/pages/Legal.jsx` : forme juridique et responsable de publication.
+
+## Contrats d'accompagnement (PDF)
+
+- Fichiers servis depuis `public/contrats/` (téléchargeables sur chaque page de service, à la fin de l'estimateur et à la fin du test Bourses QMA).
+- Honoraires et tranches : `src/config/contrats.json` (500 000 FCFA par procédure : 150 000 à l'ouverture, 150 000 à la sélection, 200 000 à la délivrance du visa ; équivalence : 50 000 + 50 000). Le site et le proforma lisent ce même fichier.
+- Après modification du JSON, régénérer les PDF : `python3 scripts/contrats.py` (reportlab + Pillow).
+- `Contrat-Bourse-QMA-Vision-Consulting.pdf` est un fichier fixe (non régénéré par le script).

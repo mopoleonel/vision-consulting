@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, FileText, Handshake, UserFocus, Info } from '@phosphor-icons/react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, FileText, Handshake, UserFocus, Info, FilePdf } from '@phosphor-icons/react'
+import { contratUrl, tranchesFor } from '../config/tarifs.js'
 import { PageHeader, Reveal } from '../components/ui.jsx'
 import { CtaBand } from '../components/Blocks.jsx'
 import { getService, services } from '../data/services.js'
@@ -99,6 +100,13 @@ export default function ServiceDetail() {
               <a href={whatsappLink(`Bonjour, je suis intéressé(e) par : ${s.title}.`)} target="_blank" rel="noopener" className="btn-ghost">WhatsApp</a>
             </div>
           </div>
+          {tranchesFor(s.slug).length > 0 && (
+            <div className="card p-6">
+              <h2 className="font-display text-lg font-bold text-brand-800 dark:text-white">Notre contrat d’accompagnement</h2>
+              <p className="muted mt-2 text-sm">Honoraires forfaitaires payés en {tranchesFor(s.slug).length} tranches, au rythme de l’avancement de votre dossier{tranchesFor(s.slug).length === 3 ? ' : la dernière seulement quand votre visa est délivré' : ''}. Lisez le contrat avant de vous engager.</p>
+              <a href={contratUrl(s.slug)} target="_blank" rel="noopener" download className="btn-ghost mt-4 w-full"><FilePdf size={18} weight="fill" className="text-maple-500" /> Lire le contrat (PDF)</a>
+            </div>
+          )}
           {usesFrench && (
             <a href={site.tcfExpressUrl} target="_blank" rel="noopener" className="group block rounded-3xl bg-maple-500 p-6 text-white">
               <p className="font-display text-lg font-bold">Le français compte ici</p>

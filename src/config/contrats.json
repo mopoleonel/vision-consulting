@@ -1,0 +1,83 @@
+{
+  "_note": "Données des contrats d'accompagnement. Utilisé par le site (tarifs, liens) et par scripts/contrats.py (génération des PDF). Après modification : python3 scripts/contrats.py",
+  "representant": "MOPO FOUJI LEONEL",
+  "fonction": "responsable du bureau de Yaoundé",
+  "telephone": "+237 687 01 66 45",
+  "plafond": 500000,
+  "procedures": {
+    "etudes-au-canada": {
+      "titre": "Études au Canada",
+      "objet": "le choix des programmes, les demandes d’admission, la demande de CAQ (Québec) ou d’attestation provinciale, puis la demande de permis d’études",
+      "selection": "À la réception de la lettre d’admission d’un établissement",
+      "visa": "À la délivrance du visa / de la lettre d’approbation du permis d’études",
+      "organismes": "établissements d’enseignement, MIFI, IRCC",
+      "tranches": [150000, 150000, 200000]
+    },
+    "entree-express": {
+      "titre": "Résidence permanente - Entrée express",
+      "objet": "la création et l’optimisation du profil Entrée express, la préparation des preuves, puis la demande de résidence permanente après invitation",
+      "selection": "À la réception de l’invitation à présenter une demande (IPD)",
+      "visa": "À la délivrance de la confirmation de résidence permanente (CRP) et du visa",
+      "organismes": "IRCC et organismes d’évaluation (tests de langue, EDE)",
+      "tranches": [150000, 150000, 200000]
+    },
+    "permis-de-travail": {
+      "titre": "Permis de travail",
+      "objet": "l’identification du permis adapté, l’adaptation du CV, le suivi des démarches avec l’employeur (EIMT ou offre dispensée) et la demande de permis de travail",
+      "selection": "À la confirmation de l’offre d’emploi (EIMT positive ou offre soumise par l’employeur)",
+      "visa": "À la délivrance du visa / de la lettre d’approbation du permis de travail",
+      "organismes": "employeur, EDSC, IRCC",
+      "tranches": [150000, 150000, 200000]
+    },
+    "mobilite-francophone": {
+      "titre": "Mobilité francophone",
+      "objet": "la préparation de la recherche d’emploi, la vérification de l’offre de l’employeur et la demande de permis de travail Mobilité francophone",
+      "selection": "À la confirmation de l’offre d’emploi soumise par l’employeur",
+      "visa": "À la délivrance du visa / de la lettre d’approbation du permis de travail",
+      "organismes": "employeur, IRCC",
+      "tranches": [150000, 150000, 200000]
+    },
+    "immigration-quebec": {
+      "titre": "Immigrer au Québec",
+      "objet": "la déclaration d’intérêt Arrima, la demande de Certificat de sélection du Québec (CSQ), puis la demande fédérale de résidence permanente",
+      "selection": "À la réception de l’invitation du Québec (Arrima)",
+      "visa": "À la délivrance de la confirmation de résidence permanente (CRP) et du visa",
+      "organismes": "MIFI, IRCC",
+      "tranches": [150000, 150000, 200000]
+    },
+    "programmes-provinciaux": {
+      "titre": "Programmes des provinces (PCP)",
+      "objet": "le choix de la province et du volet, la déclaration d’intérêt ou la demande de nomination, puis la demande fédérale de résidence permanente",
+      "selection": "À la réception de la nomination provinciale",
+      "visa": "À la délivrance de la confirmation de résidence permanente (CRP) et du visa",
+      "organismes": "gouvernement provincial concerné, IRCC",
+      "tranches": [150000, 150000, 200000]
+    },
+    "visa-visiteur": {
+      "titre": "Visa visiteur",
+      "objet": "l’analyse du profil, la constitution des justificatifs et la demande de visa de résident temporaire",
+      "selection": "Au dépôt de la demande de visa (après la prise des données biométriques)",
+      "visa": "À la délivrance du visa",
+      "organismes": "IRCC, centre de réception des demandes de visa",
+      "tranches": [150000, 150000, 200000]
+    },
+    "regroupement-familial": {
+      "titre": "Regroupement familial",
+      "objet": "la vérification de l’admissibilité du répondant, la constitution des preuves de relation et la demande de parrainage et de résidence permanente",
+      "selection": "À l’approbation du parrainage (répondant jugé admissible)",
+      "visa": "À la délivrance de la confirmation de résidence permanente (CRP) et du visa",
+      "organismes": "IRCC",
+      "tranches": [150000, 150000, 200000]
+    },
+    "equivalence-de-diplomes": {
+      "titre": "Équivalence de diplômes",
+      "objet": "le choix de l’organisme d’évaluation, la préparation des pièces, la demande en ligne et la coordination de l’envoi des documents officiels",
+      "etapes": [
+        ["À l’ouverture du dossier", 50000],
+        ["À la réception du rapport d’évaluation", 50000]
+      ],
+      "organismes": "organismes d’évaluation des diplômes (WES, CES, MIFI...), établissements d’origine",
+      "tranches": [50000, 50000]
+    }
+  }
+}
