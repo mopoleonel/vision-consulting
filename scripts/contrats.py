@@ -107,9 +107,9 @@ def build(slug, p):
                            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [white, PAPER]), ('TOPPADDING', (0, 0), (-1, -1), 5), ('BOTTOMPADDING', (0, 0), (-1, -1), 5)]))
     s += [t, Spacer(1, 4)]
     if visa:
-        stop = 'Si la procédure s’arrête avant l’étape de la 2e tranche (refus, non-sélection ou abandon), seule la 1re tranche est due et le contrat prend fin. <b>La 3e tranche n’est due que si le visa est délivré.</b> '
+        stop = 'Chaque tranche devient exigible dès que l’étape indiquée est atteinte. La 3e tranche est due à la délivrance du visa ; elle est aussi due si le visa n’est pas obtenu <b>par la faute du Bénéficiaire</b> (informations fausses, documents non fournis, délais non respectés, rendez-vous manqués). <b>En cas d’abandon par le Bénéficiaire après l’ouverture du dossier, la tranche suivante devient immédiatement exigible</b> pour le travail déjà réalisé. Seul un refus de l’organisme non imputable au Bénéficiaire met fin au contrat sans autre paiement. '
     else:
-        stop = 'Si la procédure s’arrête avant la réception du rapport (abandon du Bénéficiaire), seule la 1re tranche est due. '
+        stop = 'La 2e tranche est due à la réception du rapport. <b>En cas d’abandon par le Bénéficiaire après l’ouverture du dossier, elle devient immédiatement exigible</b> pour le travail déjà réalisé. '
     s.append(P('<b>Les frais d’assistance sont non remboursables</b>, quelle que soit l’issue de la procédure (refus, non-sélection, abandon ou désistement). ' + stop + f'Chaque paiement donne lieu à un <b>reçu signé</b>. Le Cabinet n’est pas responsable d’un paiement fait à une autre personne ou sur un autre numéro que le {tel}. '
                'Les frais officiels (gouvernement, organismes, biométrie, examens médicaux), les tests de langue, les traductions, les preuves de fonds, les billets d’avion et le logement restent à la charge du Bénéficiaire.'))
 
@@ -122,7 +122,7 @@ def build(slug, p):
         'Le Cabinet n’est pas responsable d’un refus ou d’un retard des organismes, d’un changement des règles ou des frais officiels, d’informations fausses ou tardives du Bénéficiaire, ni d’une panne des plateformes officielles. Si sa responsabilité était retenue pour une faute prouvée, elle serait <b>limitée aux honoraires perçus</b>.',
         'Toute <b>fraude ou faux document</b> entraîne la fin immédiate du contrat sans remboursement ; le Bénéficiaire en supporte seul les conséquences.'])
     article(6, 'Frais non remboursables et désistement', [
-        'Les frais d’assistance déjà versés sont <b>non remboursables</b> et restent acquis au Cabinet (refus d’un organisme, désistement ou faute du Bénéficiaire). Seule exception : si le Cabinet n’exécute pas, de son fait, une prestation prévue, la tranche correspondante est remboursée. Le Bénéficiaire peut arrêter à tout moment par écrit ; aucune tranche future n’est alors due.'])
+        'Les frais d’assistance déjà versés sont <b>non remboursables</b> et restent acquis au Cabinet (refus d’un organisme, désistement ou faute du Bénéficiaire). Seule exception : si le Cabinet n’exécute pas, de son fait, une prestation prévue, la tranche correspondante est remboursée. Le Bénéficiaire peut arrêter à tout moment par écrit ; il doit alors payer la tranche suivante prévue à l’article 3.'])
     article(7, 'Confidentialité et preuve', [
         'Les informations du Bénéficiaire restent confidentielles et ne sont transmises qu’aux organismes concernés. Les échanges WhatsApp, SMS et e-mail ont <b>valeur de preuve</b> entre les parties.'])
     article(8, 'Litiges', [
