@@ -17,6 +17,7 @@ export const proformaInfo = {
   niu: '', // ex. : M0123456789012A      (À COMPLÉTER)
   validiteJours: 30,
   conditions: [
+    'Les frais d’assistance (honoraires Vision Consulting) sont non remboursables, quelle que soit l’issue de la procédure.',
     'Les frais officiels (gouvernement, organismes, tests) sont payés directement aux organismes concernés, au nom du client.',
     'Les montants en FCFA des frais officiels sont calculés au taux indicatif indiqué et peuvent varier selon le taux du jour.',
     'Paiement accepté : espèces au bureau, Mobile Money (Orange Money / MTN MoMo) ou virement bancaire. Références communiquées par votre conseiller.',

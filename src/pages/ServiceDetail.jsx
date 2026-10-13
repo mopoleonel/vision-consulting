@@ -103,7 +103,7 @@ export default function ServiceDetail() {
           {tranchesFor(s.slug).length > 0 && (
             <div className="card p-6">
               <h2 className="font-display text-lg font-bold text-brand-800 dark:text-white">Notre contrat d’accompagnement</h2>
-              <p className="muted mt-2 text-sm">Honoraires forfaitaires payés en {tranchesFor(s.slug).length} tranches, au rythme de l’avancement de votre dossier{tranchesFor(s.slug).length === 3 ? ' : la dernière seulement quand votre visa est délivré' : ''}. Lisez le contrat avant de vous engager.</p>
+              <p className="muted mt-2 text-sm">Honoraires forfaitaires payés en {tranchesFor(s.slug).length} tranches, au rythme de l’avancement de votre dossier{tranchesFor(s.slug).length === 3 ? ' : la dernière seulement quand votre visa est délivré' : ''}. Les frais d’assistance sont <b>non remboursables</b> : lisez le contrat avant de vous engager.</p>
               <a href={contratUrl(s.slug)} target="_blank" rel="noopener" download className="btn-ghost mt-4 w-full"><FilePdf size={18} weight="fill" className="text-maple-500" /> Lire le contrat (PDF)</a>
             </div>
           )}

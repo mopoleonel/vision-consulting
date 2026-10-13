@@ -172,6 +172,7 @@ export default function Estimator() {
                       </a>
                     </div>
                     <a href={contratUrl(slug)} target="_blank" rel="noopener" download className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 underline underline-offset-2 dark:text-brand-200"><FilePdf size={16} weight="fill" className="text-maple-500" /> Lire le contrat d’accompagnement (PDF)</a>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Les frais d’assistance sont non remboursables.</p>
                     {state === 'done' && <p className="mt-3 flex items-center gap-2 text-sm font-medium text-brand-700 dark:text-brand-200"><CheckCircle weight="fill" /> Proforma n° {number} téléchargé. Ouvrez-le pour voir le détail de votre budget.</p>}
                     {state === 'error' && <p className="mt-3 text-sm font-medium text-maple-600">Le PDF n’a pas pu être créé. Réessayez ou contactez-nous sur WhatsApp.</p>}
                     <button type="button" onClick={() => { setStep(0); setState('idle'); setNumber('') }} className="mt-6 text-sm font-semibold text-slate-500 underline underline-offset-2">Faire une autre estimation</button>

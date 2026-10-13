@@ -342,7 +342,7 @@ export default function BoursesQma({ standalone = false }) {
                     {res.verdict !== 'not' && (
                       <motion.a {...reveal(8)} href={contratQmaUrl} target="_blank" rel="noopener" download className="mt-4 flex items-center gap-4 rounded-2xl border border-brand-900/10 p-4 transition hover:border-brand-500 hover:bg-brand-50 dark:border-white/10 dark:hover:bg-white/5">
                         <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-maple-50 text-maple-500 dark:bg-maple-500/15"><FilePdf size={24} weight="fill" /></span>
-                        <span><span className="block font-semibold text-brand-800 dark:text-white">Lire notre contrat d’accompagnement</span><span className="block text-sm text-slate-500 dark:text-slate-400">PDF à télécharger : honoraires, étapes et engagements</span></span>
+                        <span><span className="block font-semibold text-brand-800 dark:text-white">Lire notre contrat d’accompagnement</span><span className="block text-sm text-slate-500 dark:text-slate-400">PDF à télécharger : honoraires, étapes et engagements. Frais d’assistance non remboursables.</span></span>
                       </motion.a>
                     )}
 
